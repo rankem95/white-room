@@ -1,0 +1,1754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WHITE ROOM — Cognitive Development Program</title>
+<style>
+:root{
+  --bg:#f5f5f2; --panel:#ffffff; --ink:#111113; --ink2:#55555a;
+  --line:#111113; --soft:#d8d8d3; --red:#b5121b; --green:#1a6b3c; --gold:#8a6d1a;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:ui-monospace,'Cascadia Mono','SF Mono','Consolas',monospace;
+  font-size:14px; line-height:1.55;
+}
+::selection{background:var(--ink); color:var(--bg);}
+.wrap{max-width:1060px; margin:0 auto; padding:0 18px 90px;}
+
+/* ---------- header ---------- */
+header{border-bottom:2px solid var(--line); padding:26px 0 16px; margin-bottom:0;}
+.h-top{display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:10px;}
+.logo{font-size:34px; font-weight:800; letter-spacing:10px;}
+.logo span{color:var(--red);}
+.h-sub{font-size:10px; letter-spacing:3px; color:var(--ink2); text-transform:uppercase; margin-top:4px;}
+.h-meta{text-align:right; font-size:11px; color:var(--ink2); letter-spacing:1px; text-transform:uppercase;}
+.h-meta b{color:var(--ink); display:block; font-size:13px; letter-spacing:2px;}
+
+/* ---------- nav ---------- */
+nav{display:flex; border-bottom:2px solid var(--line); position:sticky; top:0; background:var(--bg); z-index:20; overflow-x:auto;}
+nav button{
+  flex:1; background:none; border:none; border-right:1px solid var(--soft);
+  padding:12px 8px; font-family:inherit; font-size:11px; letter-spacing:2px;
+  text-transform:uppercase; cursor:pointer; color:var(--ink2); white-space:nowrap;
+}
+nav button:last-child{border-right:none;}
+nav button.active{background:var(--ink); color:var(--bg); font-weight:700;}
+nav button:hover:not(.active){background:#e9e9e4; color:var(--ink);}
+
+/* ---------- common ---------- */
+section.tab{display:none; padding-top:22px;}
+section.tab.show{display:block;}
+.panel{background:var(--panel); border:1px solid var(--line); padding:16px 18px; margin-bottom:14px;}
+.panel h2{font-size:12px; letter-spacing:3px; text-transform:uppercase; border-bottom:1px solid var(--soft); padding-bottom:8px; margin-bottom:12px;}
+.panel h2 .tag{float:right; color:var(--ink2); font-weight:400; letter-spacing:1px;}
+.grid2{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+.grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+@media(max-width:760px){.grid2,.grid3{grid-template-columns:1fr;}}
+.kv{font-size:11px; color:var(--ink2); text-transform:uppercase; letter-spacing:2px;}
+.big{font-size:30px; font-weight:800; letter-spacing:1px;}
+.bar{height:10px; border:1px solid var(--line); background:var(--panel); margin-top:6px;}
+.bar i{display:block; height:100%; background:var(--ink);}
+.bar i.red{background:var(--red);}
+.mut{color:var(--ink2);}
+.sm{font-size:12px;}
+.xs{font-size:11px;}
+button.act{
+  background:var(--ink); color:var(--bg); border:1px solid var(--ink);
+  font-family:inherit; font-size:11px; letter-spacing:2px; text-transform:uppercase;
+  padding:8px 14px; cursor:pointer;
+}
+button.act:hover{background:var(--red); border-color:var(--red);}
+button.ghost{background:none; color:var(--ink); border:1px solid var(--ink); font-family:inherit; font-size:11px; letter-spacing:2px; text-transform:uppercase; padding:8px 14px; cursor:pointer;}
+button.ghost:hover{background:var(--ink); color:var(--bg);}
+input[type=text],input[type=number],select,textarea{
+  font-family:inherit; font-size:13px; border:1px solid var(--line); background:var(--panel);
+  padding:8px 10px; color:var(--ink); width:100%;
+}
+.hr{border:none; border-top:1px solid var(--soft); margin:12px 0;}
+.right{text-align:right;}
+.rank-red{color:var(--red);} .ok{color:var(--green);}
+
+/* ---------- directive ---------- */
+.directive{border-left:4px solid var(--red); padding:10px 14px; background:var(--panel); border-top:1px solid var(--soft); border-right:1px solid var(--soft); border-bottom:1px solid var(--soft); font-style:italic; margin-bottom:14px;}
+.directive .kv{font-style:normal; margin-bottom:4px;}
+
+/* ---------- protocol list ---------- */
+.drill{display:flex; align-items:flex-start; gap:12px; border:1px solid var(--soft); border-left:3px solid var(--ink); padding:10px 12px; margin-bottom:8px; background:var(--panel);}
+.drill.done{opacity:.45; border-left-color:var(--green);}
+.drill input[type=checkbox]{width:18px; height:18px; margin-top:2px; accent-color:#111113; cursor:pointer; flex:none;}
+.drill .dn{font-weight:700; font-size:13px;}
+.drill .dm{font-size:11px; color:var(--ink2); text-transform:uppercase; letter-spacing:1px;}
+.drill .dd{font-size:12px; color:var(--ink2); margin-top:3px;}
+.dtag{display:inline-block; font-size:9px; letter-spacing:2px; padding:1px 6px; border:1px solid var(--ink); text-transform:uppercase; margin-right:6px;}
+.dtag.MIND{border-color:#1c3f8f; color:#1c3f8f;}
+.dtag.SOCIAL{border-color:var(--red); color:var(--red);}
+.dtag.BODY{border-color:var(--green); color:var(--green);}
+.dtag.STRATEGY{border-color:var(--gold); color:var(--gold);}
+.dtag.CORE{border-color:var(--ink2); color:var(--ink2);}
+.howbtn{background:none; border:none; font-family:inherit; font-size:10px; letter-spacing:2px; color:var(--red); cursor:pointer; text-transform:uppercase; padding:0; margin-top:6px;}
+.howbtn:hover{text-decoration:underline;}
+.steps{display:none; margin-top:8px; border-top:1px dashed var(--soft); padding-top:8px;}
+.steps.show{display:block;}
+.steps ol{margin:0 0 6px 20px; font-size:12px;}
+.steps ol li{margin-bottom:5px;}
+.steps .nlink{font-size:10px; letter-spacing:2px; text-transform:uppercase;}
+
+/* ---------- skill tree ---------- */
+.domtabs{display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;}
+.domtabs button{flex:1; min-width:120px;}
+.node{border:1px solid var(--line); margin-bottom:10px; background:var(--panel);}
+.node.locked{border-color:var(--soft); color:var(--ink2);}
+.node.locked .nh{cursor:not-allowed;}
+.node .nh{display:flex; justify-content:space-between; align-items:center; padding:12px 14px; cursor:pointer; gap:10px;}
+.node .nh .nt{font-weight:700; font-size:13px; letter-spacing:.5px;}
+.node .nh .tier{font-size:10px; letter-spacing:2px; color:var(--ink2); text-transform:uppercase; white-space:nowrap;}
+.node .nb{display:none; border-top:1px solid var(--soft); padding:14px; font-size:13px;}
+.node.open .nb{display:block;}
+.node.mastered{border-left:4px solid var(--green);}
+.node .nb h4{font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--red); margin:14px 0 6px;}
+.node .nb h4:first-child{margin-top:0;}
+.node .nb p{margin-bottom:8px;}
+.node .nb ul{margin:0 0 8px 18px;}
+.node .nb li{margin-bottom:4px;}
+.status-pill{font-size:9px; letter-spacing:2px; padding:2px 8px; text-transform:uppercase; border:1px solid;}
+.status-pill.m{border-color:var(--green); color:var(--green);}
+.status-pill.a{border-color:var(--ink); color:var(--ink);}
+.status-pill.l{border-color:var(--soft); color:var(--ink2);}
+
+/* ---------- evaluations ---------- */
+.metric{border:1px solid var(--line); background:var(--panel); padding:12px 14px; margin-bottom:10px;}
+.metric .mrow{display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;}
+.metric .mn{font-weight:700; font-size:13px;}
+.metric .mi{font-size:12px; color:var(--ink2); margin-top:4px;}
+.metric .mval{font-size:22px; font-weight:800;}
+.metric .rec{display:flex; gap:8px; margin-top:8px;}
+.metric input{max-width:130px;}
+svg.spark{display:block; margin-top:8px; width:100%; height:46px;}
+
+/* ---------- timer ---------- */
+.timer{display:flex; align-items:center; gap:14px; flex-wrap:wrap;}
+.tdisp{font-size:44px; font-weight:800; letter-spacing:3px; min-width:170px;}
+.tdisp.run{color:var(--red);}
+
+/* ---------- archive ---------- */
+.arch h3{font-size:13px; letter-spacing:2px; text-transform:uppercase; margin:18px 0 8px; border-bottom:1px solid var(--soft); padding-bottom:5px;}
+.arch p{margin-bottom:8px; font-size:13px;}
+.arch ul{margin:0 0 10px 18px; font-size:13px;}
+.arch li{margin-bottom:4px;}
+.arch a{color:var(--red);}
+
+/* ---------- test modal ---------- */
+#tmodal{position:fixed; inset:0; background:rgba(17,17,19,.82); z-index:90; display:none; align-items:center; justify-content:center;}
+.tm-box{background:var(--panel); border:2px solid var(--line); width:min(640px,94%); max-height:90vh; overflow-y:auto;}
+.tm-head{display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--line); padding:10px 14px;}
+.tm-head span{font-size:12px; letter-spacing:3px; font-weight:700; text-transform:uppercase;}
+.tm-head button{background:none; border:none; font-family:inherit; font-size:11px; letter-spacing:2px; color:var(--red); cursor:pointer;}
+#tm-body{padding:20px;}
+.tm-big{font-size:72px; font-weight:800; text-align:center; letter-spacing:6px; min-height:100px; display:flex; align-items:center; justify-content:center;}
+.tm-mid{font-size:26px; font-weight:800; text-align:center;}
+.tm-ctr{text-align:center;}
+.tm-stat{font-size:11px; color:var(--ink2); text-transform:uppercase; letter-spacing:2px; text-align:center; margin-top:10px;}
+.nbgrid{display:grid; grid-template-columns:repeat(3,72px); gap:6px; justify-content:center; margin:10px auto;}
+.nbcell{width:72px; height:72px; border:1px solid var(--line); background:var(--bg);}
+.nbcell.on{background:var(--ink);}
+.nbkeys{display:flex; gap:10px; justify-content:center; margin-top:12px;}
+.nbkeys button{min-width:150px;}
+.nbkeys button.hit{background:var(--green); border-color:var(--green); color:#fff;}
+.kimgrid{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:12px 0;}
+.kimit{border:1px solid var(--line); padding:8px 10px; font-size:13px; background:var(--bg); cursor:default;}
+.kimit.pick{cursor:pointer;}
+.kimit.sel{background:var(--ink); color:var(--bg);}
+.wordcols{columns:2; font-size:15px; line-height:1.9; margin:12px 0;}
+/* ---------- worksheets ---------- */
+.wspick{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px;}
+.wsform label{display:block; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--ink2); margin:12px 0 4px;}
+.wsform textarea{min-height:84px; resize:vertical;}
+.wsitem{border:1px solid var(--line); background:var(--panel); margin-bottom:8px;}
+.wsitem .wh{display:flex; justify-content:space-between; align-items:center; padding:10px 12px; cursor:pointer; gap:8px; flex-wrap:wrap;}
+.wsitem .wb{display:none; border-top:1px solid var(--soft); padding:12px 14px; font-size:13px;}
+.wsitem.open .wb{display:block;}
+.wsitem .wb .fld{margin-bottom:10px;}
+.wsitem .wb .fld b{display:block; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--red);}
+.wsitem .wb .fld pre{white-space:pre-wrap; font-family:inherit; margin-top:2px;}
+/* ---------- forecast ledger ---------- */
+.fcrow{display:flex; align-items:center; gap:8px; border:1px solid var(--soft); padding:6px 10px; margin-bottom:6px; font-size:12px; flex-wrap:wrap;}
+.fcrow .fx{flex:1; min-width:180px;}
+.fcrow button{padding:4px 10px;}
+/* ---------- onboarding ---------- */
+#gate{position:fixed; inset:0; background:var(--bg); z-index:100; display:flex; align-items:center; justify-content:center;}
+#gate .box{max-width:520px; width:92%; border:2px solid var(--line); background:var(--panel); padding:34px;}
+#gate .logo{font-size:28px;}
+#gate p{font-size:13px; color:var(--ink2); margin:14px 0;}
+#gate input{margin-bottom:14px;}
+
+/* ---------- toast ---------- */
+#toast{position:fixed; bottom:22px; left:50%; transform:translateX(-50%); background:var(--ink); color:var(--bg); padding:10px 22px; font-size:11px; letter-spacing:2px; text-transform:uppercase; display:none; z-index:99;}
+
+footer{border-top:1px solid var(--soft); margin-top:30px; padding-top:12px; font-size:10px; color:var(--ink2); letter-spacing:1px; text-transform:uppercase;}
+</style>
+</head>
+<body>
+
+<div id="gate" style="display:none">
+  <div class="box" id="gbox">
+    <div class="logo">WHITE<span>·</span>ROOM</div>
+    <div class="h-sub">Cognitive Development Institution — 5th Generation</div>
+    <div id="gresume" style="display:none">
+      <p style="margin-top:14px"><b>Returning subject?</b> This browser holds no record. If you have an exported backup (.json), load it and continue exactly where you left off:</p>
+      <button class="act" style="width:100%" onclick="document.getElementById('gimp').click()">▶ RESUME FROM BACKUP FILE</button>
+      <input type="file" id="gimp" accept=".json" style="display:none" onchange="importData(event)">
+      <hr class="hr" style="margin:16px 0">
+      <p class="xs mut" style="margin-bottom:6px">— or induct a new subject —</p>
+    </div>
+    <p id="gintro">You have been admitted. From this point forward your progress is measured, your weaknesses are catalogued, and your excuses are irrelevant. Equality of outcome is a fiction; capability is manufactured here.</p>
+    <p>State your designation.</p>
+    <input type="text" id="gname" placeholder="Name or alias" maxlength="24">
+    <button class="act" onclick="enroll()">BEGIN INDUCTION</button>
+  </div>
+</div>
+
+<div class="wrap">
+<header>
+  <div class="h-top">
+    <div>
+      <div class="logo">WHITE<span>·</span>ROOM</div>
+      <div class="h-sub">Cognitive Development Institution — 5th Generation Program</div>
+    </div>
+    <div class="h-meta">
+      <b id="h-subject">SUBJECT —</b>
+      <span id="h-day">DAY 0</span> · <span id="h-date"></span>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <button data-tab="dash" class="active">Dashboard</button>
+  <button data-tab="today">Today's Protocol</button>
+  <button data-tab="tree">Curriculum</button>
+  <button data-tab="eval">Evaluations</button>
+  <button data-tab="ws">Worksheets</button>
+  <button data-tab="arch">Doctrine</button>
+  <button data-tab="set">Records</button>
+</nav>
+
+<section class="tab show" id="tab-dash"></section>
+<section class="tab" id="tab-today"></section>
+<section class="tab" id="tab-tree"></section>
+<section class="tab" id="tab-eval"></section>
+<section class="tab" id="tab-ws"></section>
+<section class="tab" id="tab-arch"></section>
+<section class="tab" id="tab-set"></section>
+
+<div id="tmodal"><div class="tm-box">
+  <div class="tm-head"><span id="tm-title"></span><button onclick="TM.close()">✕ ABORT</button></div>
+  <div id="tm-body"></div>
+</div></div>
+
+<footer>WHITE ROOM v1.7 — Memory is automatic: progress saves to this browser after every action. Export an occasional backup from RECORDS. This is a self-development tool; it is not medical, psychological, or legal advice.</footer>
+</div>
+
+<div id="toast"></div>
+
+<script>
+"use strict";
+/* =====================================================
+   DATA — CURRICULUM (4 domains × 8 nodes × 5 tiers)
+   ===================================================== */
+const DOMAINS = ["MIND","SOCIAL","BODY","STRATEGY"];
+const NODES = [
+/* ================= MIND ================= */
+{id:"m1",domain:"MIND",tier:1,name:"Retrieval Doctrine",
+brief:"Spaced repetition and active recall — the only two study methods with overwhelming evidence behind them.",
+guide:`<h4>Why</h4><p>Re-reading feels productive and does almost nothing. Testing yourself (retrieval practice) and spacing reviews out over expanding intervals (spaced repetition) produce 2–3× the retention of massed study. Every other technique in this program sits on top of this one.</p>
+<h4>Protocol</h4><ul>
+<li>Install Anki (free) or run a paper Leitner box (5 boxes; correct → next box, wrong → box 1; box 1 daily, box 2 every 2 days, box 3 weekly, box 4 biweekly, box 5 monthly).</li>
+<li>Everything you want to keep — names, facts, techniques from this program, vocabulary — becomes a card the same day you meet it.</li>
+<li>Rule: cards ask ONE thing, and you must attempt the answer from memory before flipping. Reviews happen daily, no exceptions. 10 minutes, every day, forever.</li>
+<li>Add "desirable difficulty": shuffle topics together (interleaving) instead of reviewing one subject in a block. It feels worse and works better.</li></ul>
+<h4>Mastery</h4><p>21 consecutive days of daily review with ≥100 mature cards in rotation.</p>`},
+{id:"m2",domain:"MIND",tier:1,name:"Deep Work Protocol",
+brief:"Train sustained attention in 90-minute ultradian blocks. Attention is the substrate of every other skill.",
+guide:`<h4>Why</h4><p>Ericsson's studies of elite performers found practice sessions capped near 90 minutes with real breaks — matching the brain's ultradian rest-activity cycle. Focus is trainable like a muscle, and most people have never trained it once.</p>
+<h4>Protocol</h4><ul>
+<li>One block daily: phone in another room, one defined objective written down before you start, visible timer (use TODAY'S PROTOCOL tab).</li>
+<li>Start at 25 minutes if untrained. Add 5 minutes each week you hit every session. Target: a clean 90.</li>
+<li>Keep a distraction tally: every urge to switch tasks gets a tick mark on paper, then you return. The tick IS the rep — noticing and returning is the trained skill.</li>
+<li>Breaks between blocks are mandatory and must be genuinely idle (walk, stare out a window). No phone — that's not recovery, it's a different stimulus.</li></ul>
+<h4>Mastery</h4><p>A 90-minute block with ≤3 distraction ticks, three times in one week.</p>`},
+{id:"m3",domain:"MIND",tier:2,name:"Method of Loci",
+brief:"The memory palace — the 2,500-year-old spatial memory system used by every world memory champion.",
+guide:`<h4>Why</h4><p>Your spatial memory is vastly stronger than your verbal memory. The method of loci exploits this: place vivid images along a route through a place you know, and the route retrieves them in order. Declassified intelligence training and modern memory sport both rest on this.</p>
+<h4>Protocol</h4><ul>
+<li>Build your first palace: your home. Walk a fixed route and number 20 distinct loci (front door, shoe rack, couch, window…). Rehearse the empty route until automatic.</li>
+<li>Encoding rule: images must be exaggerated, moving, interacting with the locus, and slightly absurd. "Milk" is weak; a carton exploding over your couch is strong.</li>
+<li>Drill: memorize a 20-item list, recall forward and backward. Then re-use the palace next day (images fade; palaces are reusable).</li>
+<li>Expand: build 5 palaces (home, workplace/school, a relative's house, a familiar walk, a mall) for ~100 loci total.</li></ul>
+<h4>Mastery</h4><p>20 random words in under 4 minutes, perfect recall both directions, on 3 separate occasions.</p>`},
+{id:"m4",domain:"MIND",tier:2,name:"The Major System",
+brief:"Convert numbers into images. Phone numbers, dates, PINs, and card decks become memorable.",
+guide:`<h4>Why</h4><p>Numbers are abstract, so they're forgettable. The Major System maps digits to consonant sounds (0=s/z, 1=t/d, 2=n, 3=m, 4=r, 5=l, 6=sh/ch/j, 7=k/g, 8=f/v, 9=p/b); vowels are free. 32 → "MooN". 851 → "FLighT". Numbers become images; images go in palaces.</p>
+<h4>Protocol</h4><ul>
+<li>Week 1: learn the 10 digit-sounds cold (make Anki cards). Encode/decode single digits and pairs on sight.</li>
+<li>Week 2–4: build a fixed image for every number 00–99 (your "peg list"). 10 per day into spaced repetition.</li>
+<li>Drill: memorize 20-digit strings by chunking into pairs → images → palace. Time yourself weekly.</li>
+<li>Advanced: a PAO (Person-Action-Object) system compresses 6 digits into one scene — this is what memory athletes use for cards and long numbers.</li></ul>
+<h4>Mastery</h4><p>A 30-digit number memorized in under 5 minutes with perfect recall after 1 hour.</p>`},
+{id:"m5",domain:"MIND",tier:3,name:"Dual N-Back",
+brief:"The one 'brain training' task with real evidence for working memory transfer.",
+guide:`<h4>Why</h4><p>Most brain games train only the game. Dual n-back — tracking whether a position AND a sound match those from n steps back — is the exception: controlled studies show transfer to untrained working-memory tasks, with some evidence stronger than method-of-loci training for raw capacity. Working memory is the RAM every reasoning task runs in.</p>
+<h4>Protocol</h4><ul>
+<li>Use Brain Workshop (free desktop app) or any dual n-back app. 15 minutes, 3–4 sessions per week.</li>
+<li>Start at 2-back. The app advances you automatically. Expect to feel maxed out — that strain is the stimulus.</li>
+<li>Do it fresh (early in the day), not as a tired-brain filler. Log your average n-level weekly in EVALUATIONS.</li>
+<li>Temper expectations: it sharpens the blade (capacity), it doesn't forge it (knowledge). Pair with the retrieval doctrine.</li></ul>
+<h4>Mastery</h4><p>Stable performance at 4-back or higher across a full week of sessions.</p>`},
+{id:"m6",domain:"MIND",tier:3,name:"Combat Mathematics",
+brief:"Mental arithmetic and Fermi estimation — compute while others reach for a phone.",
+guide:`<h4>Why</h4><p>Fast mental math is less about math than about dominance of tempo: the person who can estimate a deal, split, probability, or order-of-magnitude instantly controls the discussion. Fermi estimation (decomposing an unknown into estimable parts) is also core analyst tradecraft.</p>
+<h4>Protocol</h4><ul>
+<li>Techniques to drill (one per week): left-to-right addition; ×11, ×5, ×25 shortcuts; squaring numbers ending in 5; difference of squares for 2-digit multiplication (47×53 = 50²−3²); percentage flips (8% of 25 = 25% of 8).</li>
+<li>Daily drill: 20 two-digit multiplications, timed. Log the time weekly.</li>
+<li>Fermi drill (2/week): "How many piano tuners in this city?" — decompose, estimate each factor, state a range, then check. Score yourself on whether truth fell in your range.</li></ul>
+<h4>Mastery</h4><p>20 two-digit multiplications in under 4 minutes at ≥90% accuracy; Fermi ranges capture truth 6 times out of 10.</p>`},
+{id:"m7",domain:"MIND",tier:4,name:"The Feynman Extraction",
+brief:"If you can't explain it simply, you don't understand it. Weaponized learning speed.",
+guide:`<h4>Why</h4><p>The illusion of knowledge is the default human state. The Feynman technique destroys it: attempting a from-scratch explanation exposes every gap. Combined with retrieval practice, this is the fastest known path from "read about it" to "own it".</p>
+<h4>Protocol</h4><ul>
+<li>Pick a concept. Write an explanation as if teaching a sharp 12-year-old — no jargon allowed. Where you stall or reach for jargon, you've found a gap.</li>
+<li>Return to the source ONLY for the gaps. Re-explain. Iterate until smooth.</li>
+<li>Compress to one paragraph, then one sentence. Card the sentence into spaced repetition.</li>
+<li>Weekly: one full extraction on something from your field, plus one from a foreign field (rotating: economics, biology, law, physics, history).</li></ul>
+<h4>Mastery</h4><p>12 completed extractions, including 4 outside your home field, each survived a week-later blind re-explanation.</p>`},
+{id:"m8",domain:"MIND",tier:5,name:"Capstone: The Deck",
+brief:"Memorize a shuffled deck of 52 cards. The graduation exam of the memory arts.",
+guide:`<h4>Why</h4><p>A shuffled deck integrates everything: loci (a 26-locus palace), a card-image system, encoding speed, and recall discipline. It is also an unfakeable demonstration — to yourself — that your memory is now an instrument.</p>
+<h4>Protocol</h4><ul>
+<li>Assign each card an image (simplest: Major-System style — e.g., clubs=professions, hearts=people you know, etc. — or a full PAO if you built one).</li>
+<li>Drill card-image recognition in Anki until each card converts in &lt;2 seconds.</li>
+<li>Memorize: 2 cards per locus, 26 loci. Start untimed; then bring your time down weekly. Log in EVALUATIONS.</li>
+<li>Recall must be perfect — one error and the attempt fails, as in competition.</li></ul>
+<h4>Mastery</h4><p>One full deck, perfect recall, under 10 minutes. (World class is under 30 seconds; you need competence, not a crown.)</p>`},
+
+/* ================= SOCIAL ================= */
+{id:"s1",domain:"SOCIAL",tier:1,name:"Observation: Kim's Game",
+brief:"The sniper-school and spy-school memory-observation drill, from Kipling to Quantico.",
+guide:`<h4>Why</h4><p>Scout Sniper schools and intelligence services train observation with "Kim's Game" (from Kipling's novel about a spy's training): study a scene briefly, then report it in detail after a delay. Most people look; almost nobody sees. This is the foundation of reading people and rooms.</p>
+<h4>Protocol</h4><ul>
+<li>Daily 5-minute version: glance at any scene (a shelf, a café table, a stranger's desk) for 30 seconds. Look away. List everything: objects, positions, colors, text. Verify.</li>
+<li>Progressive overload, as in sniper school: more items, less viewing time, longer delay before reporting. Work toward reporting a 20-object scene hours later.</li>
+<li>Field version: after leaving any shop or meeting, reconstruct — how many people, exits, what was each person wearing, who was anxious?</li>
+<li>Run Cooper's color codes as your default state: White (oblivious) is forbidden; live in Yellow (relaxed, aware).</li></ul>
+<h4>Mastery</h4><p>18/20 objects recalled after a 2-hour delay, three separate times.</p>`},
+{id:"s2",domain:"SOCIAL",tier:1,name:"Baseline Reading",
+brief:"Read people the way professionals actually do: baselines and clusters, not TV 'tells'.",
+guide:`<h4>Why</h4><p>Folk body-language ("crossed arms = defensive") is unreliable, and even microexpression training has mixed evidence. What works is baselining: learn a person's normal, then watch for deviations from it, in clusters, at meaningful moments. This is how interviewers and behavioral analysts are actually trained.</p>
+<h4>Protocol</h4><ul>
+<li>For each regular person in your life, quietly log their baseline: speech pace, gesture level, eye contact, posture, humor style.</li>
+<li>Watch for deviation clusters: 2–3 simultaneous changes (voice pitch + self-touch + verbal hedging) timed to a specific topic. One signal alone means nothing.</li>
+<li>Practice on recorded interviews/poker streams: mute predictions — guess the state, then unmute and check.</li>
+<li>Log reads in a notebook with a confidence level; score them when truth emerges. Calibration, not confidence, is the goal.</li></ul>
+<h4>Mastery</h4><p>A written baseline file on 5 people, and 10 logged deviation-reads of which ≥7 were later confirmed.</p>`},
+{id:"s3",domain:"SOCIAL",tier:2,name:"Elicitation",
+brief:"The intelligence officer's art of getting information without ever asking a question.",
+guide:`<h4>Why</h4><p>Declassified tradecraft and FBI counterintelligence briefings describe elicitation: structuring conversation so people volunteer information. It works because of human reflexes — the need to correct errors, to appear knowledgeable, to reciprocate disclosure, to complete stories.</p>
+<h4>Protocol</h4><ul>
+<li>Core techniques to practice (one per week): <b>the deliberate error</b> (state something slightly wrong; people compulsively correct you), <b>bracketing</b> ("I heard it cost somewhere between 50 and 100k…" — they'll narrow it), <b>reciprocal disclosure</b> (share something minor and personal; they match), <b>naive curiosity</b> (people love teaching), <b>the provocative statement</b> ("that could never work here" invites proof).</li>
+<li>Use the hourglass structure: broad small talk → narrow to the topic briefly → widen again so the probe is never the memorable part.</li>
+<li>Practice in zero-stakes settings: baristas, taxi drivers, colleagues on neutral topics. Objective: learn one true thing without asking one direct question.</li>
+<li><b>Constraint:</b> this is for understanding people and defending against those who do it to you — note how salespeople and recruiters run these on YOU. Never use it to extract what someone has a right to keep, or to harm them.</li></ul>
+<h4>Mastery</h4><p>10 logged elicitation exercises, 5 techniques used, plus 3 documented instances of catching elicitation aimed at you.</p>`},
+{id:"s4",domain:"SOCIAL",tier:2,name:"The Seven Levers",
+brief:"Cialdini's principles of influence — the operating system of every sale, cult, and campaign.",
+guide:`<h4>Why</h4><p>Forty years of experimental social psychology reduce to seven levers: <b>reciprocity, commitment/consistency, social proof, authority, liking, scarcity, unity</b>. Whoever doesn't know them is operated by them daily.</p>
+<h4>Protocol</h4><ul>
+<li>Study one lever per week (read the corresponding chapter of <i>Influence</i>). Card the definitions and canonical experiments into spaced repetition.</li>
+<li>Daily spotting drill: find 2 uses of any lever in the wild (ads, emails, friends, your own behavior). Log them. Within a month you'll see the wiring in everything.</li>
+<li>Ethical application drill: once per week, deliberately and honestly use ONE lever — e.g., genuine reciprocity (provide value first), honest social proof, real scarcity. Log what happened.</li>
+<li>Defense drill: when you feel a sudden urge to comply with anything, name the lever out loud before deciding. The naming breaks the automaticity.</li></ul>
+<h4>Mastery</h4><p>All 7 levers defined from memory with experiments; 50 logged sightings; 8 ethical applications; 5 defended compliance attempts.</p>`},
+{id:"s5",domain:"SOCIAL",tier:3,name:"Tactical Empathy",
+brief:"The FBI hostage-negotiation toolkit: mirrors, labels, and calibrated questions.",
+guide:`<h4>Why</h4><p>FBI negotiators learned that people move only when they feel understood. Tactical empathy — demonstrating you grasp the other side's position without conceding it — outperforms argument in nearly every negotiation study and field account.</p>
+<h4>Protocol</h4><ul>
+<li><b>Mirroring:</b> repeat their last 1–3 words with an upward inflection, then silence. They elaborate. Drill 3×/day in normal conversation.</li>
+<li><b>Labeling:</b> "It seems like…", "It sounds like you're worried that…". Name the emotion; never say "I understand". Watch resistance drain.</li>
+<li><b>Calibrated questions:</b> open questions starting How/What that make them solve your problem: "How am I supposed to do that?" "What's the biggest obstacle here?"</li>
+<li><b>The accusation audit:</b> before a hard conversation, list every negative thing they could think about you and defuse it up front ("You're going to think I'm being unfair…").</li>
+<li>Run one real micro-negotiation weekly (a bill, a deadline, a favor) using only these tools. Log the outcome.</li></ul>
+<h4>Mastery</h4><p>12 logged negotiations with tool-by-tool notes; at least 6 clearly better outcomes than your old default would have produced.</p>`},
+{id:"s6",domain:"SOCIAL",tier:3,name:"The Mask",
+brief:"Composure under provocation. Nothing on your face that you did not put there.",
+guide:`<h4>Why</h4><p>Emotional leakage is the channel every reader, negotiator, and manipulator exploits. Arousal control — the same skill the SEAL "Big Four" trains (goal-setting, visualization, self-talk, arousal control) — lets you choose your expression instead of broadcasting your state.</p>
+<h4>Protocol</h4><ul>
+<li>Physiology first: at the first spike of anger/anxiety, run one physiological sigh (double inhale through nose, long exhale) — it's the fastest known downshift — then respond.</li>
+<li>The 3-second rule: in any charged exchange, a deliberate 3-second pause before every reply. It reads as gravitas and buys the mask time.</li>
+<li>Provocation drills: have losses, insults, and bad beats rehearsed — play games you lose, read comments that annoy you — while holding neutral face and slow breath. Poker (even free online) is a superb mask gymnasium.</li>
+<li>Voice control: record yourself in a disagreement (with consent) or after one, re-enacting. Train flat pitch, low volume, slow pace under load.</li></ul>
+<h4>Mastery</h4><p>A trusted person cannot tell your true reaction in 3 provocation tests; heart rate returns to baseline within 2 minutes of a stressor (verify with any HR monitor).</p>`},
+{id:"s7",domain:"SOCIAL",tier:4,name:"Cold Reading Literacy",
+brief:"How psychics, fortune tellers, and con artists manufacture insight — learn the machine to be immune to it.",
+guide:`<h4>Why</h4><p>Cold reading is the con artist's stack: Barnum statements ("you have a side of you others rarely see"), shotgunning, high-probability guesses, and letting the mark fill the gaps. Knowing the machinery makes you immune to flattery-based manipulation — and shows you how much people reveal without speaking.</p>
+<h4>Protocol</h4><ul>
+<li>Study the components: Barnum/Forer statements, the rainbow ruse ("you can be X, but when needed, quite the opposite"), probability guessing by demographic, and the push-off ("does that make sense to you?" transfers the work to the mark).</li>
+<li>Spotting drill: watch recorded psychic readings and horoscopes; classify every line by technique. It becomes comically transparent within hours of practice.</li>
+<li>Inference drill (the legitimate core): from observable evidence only — dress, wear patterns, phone, posture, vocabulary — write 5 factual hypotheses about a stranger, with confidence levels. Verify what you ethically can. This is Sherlock-style inference training with a calibration score.</li>
+<li><b>Constraint:</b> spot it, defend against it, train inference. Running cons is beneath you — deception for gain is the tool of people with no real capability.</li></ul>
+<h4>Mastery</h4><p>Correctly classify 20 techniques in recorded readings; inference drill calibration ≥60% at stated confidence over 30 hypotheses.</p>`},
+{id:"s8",domain:"SOCIAL",tier:5,name:"Capstone: The Room",
+brief:"Integrate everything: walk into any room and leave with the map.",
+guide:`<h4>Why</h4><p>Isolated social skills are parlor tricks. The capstone is synthesis: observation, baselining, elicitation, influence literacy, and composure running simultaneously and invisibly in a live environment.</p>
+<h4>Protocol</h4><ul>
+<li>Choose a recurring group setting (class, team, club, workplace).</li>
+<li>Build the map over 4 weeks: who holds formal power vs. actual influence; who defers to whom; alliances, rivalries, and what each person wants; each key person's baseline and levers.</li>
+<li>Document it as an analyst would: a network diagram, evidence for each edge, confidence levels. Update weekly.</li>
+<li>Validation: make 5 predictions about group behavior ("if X proposes this, Y will resist, Z will side with Y"). Score them as events unfold.</li>
+<li>Then do something Ayanokoji wouldn't: use the map to quietly make one situation better for someone with no benefit to yourself. Power you never test against a good purpose is just vanity.</li></ul>
+<h4>Mastery</h4><p>A complete written map of one real group; ≥4 of 5 behavioral predictions correct.</p>`},
+
+/* ================= BODY ================= */
+{id:"b1",domain:"BODY",tier:1,name:"Sleep Architecture",
+brief:"Sleep is where memory consolidates and willpower regenerates. It is training, not rest from training.",
+guide:`<h4>Why</h4><p>Every skill in this program consolidates during sleep — memory traces literally replay and strengthen. Chronic short sleep measurably degrades working memory, emotional control (your Mask), and endurance. The White Room would call sleep deprivation what it is: self-sabotage.</p>
+<h4>Protocol</h4><ul>
+<li>Fixed wake time, 7 days a week — the single highest-leverage intervention. Anchor everything to it.</li>
+<li>Morning: 10+ minutes of outdoor light within an hour of waking (sets circadian phase).</li>
+<li>Caffeine cutoff 8–10 hours before bed. Alcohol is a sleep-architecture wrecker; treat it accordingly.</li>
+<li>Last hour: dim lights, no work, no feeds. The bedroom is cold, dark, silent.</li>
+<li>Log sleep hours in EVALUATIONS weekly. Target ≥7.5h average.</li></ul>
+<h4>Mastery</h4><p>21 consecutive days: fixed wake time ±30 min and ≥7h average.</p>`},
+{id:"b2",domain:"BODY",tier:1,name:"Arousal Control",
+brief:"Box breathing and the physiological sigh — the SEAL-tested remote control for your nervous system.",
+guide:`<h4>Why</h4><p>Navy SEAL training adopted "box breathing" because slow, structured breathing with holds directly drives the vagus nerve and downshifts arousal within 2–3 cycles. It is the bridge between Body and the Mask: a nervous system you can steer on command.</p>
+<h4>Protocol</h4><ul>
+<li><b>Box breathing:</b> inhale 4s — hold 4s — exhale 4s — hold 4s. Five minutes every morning (it's in your daily core protocol) and before anything that matters: tests, confrontations, performances.</li>
+<li><b>Physiological sigh</b> (fast-acting, for acute spikes): two sharp nasal inhales back-to-back, then one long mouth exhale. 1–3 reps.</li>
+<li>Progression: extend to 5-5-5-5 then 6-6-6-6 as comfort grows.</li>
+<li>Deploy deliberately: log every real-world deployment (pre-exam, mid-argument) and what it did.</li></ul>
+<h4>Mastery</h4><p>Comfortable 6-6-6-6 for 5 minutes; 10 logged real-world deployments with observed effect.</p>`},
+{id:"b3",domain:"BODY",tier:2,name:"The Engine (Zone 2)",
+brief:"Aerobic base building — the physiological foundation of endurance, recovery, and brain health.",
+guide:`<h4>Why</h4><p>Zone 2 (able to hold a conversation, but you'd rather not) builds mitochondrial density — the engine behind physical endurance, faster recovery between all stressors, and measurable cognitive benefit. Research points to ~150–200 minutes weekly as the effective dose.</p>
+<h4>Protocol</h4><ul>
+<li>3–4 sessions/week × 45–60 min: brisk incline walking, easy running, cycling — anything rhythmic.</li>
+<li>Intensity discipline is the skill: use the talk test or a HR monitor (~180 minus age as a rough ceiling). Going harder is a different workout and mostly ego.</li>
+<li>Stack it: Zone 2 pairs perfectly with audiobooks/lectures from your MIND work, or with observation drills if outdoors.</li>
+<li>Log weekly minutes and resting heart rate in EVALUATIONS — resting HR falling over months is the engine growing.</li></ul>
+<h4>Mastery</h4><p>8 consecutive weeks at ≥150 Zone-2 minutes; resting HR trending down.</p>`},
+{id:"b4",domain:"BODY",tier:2,name:"Grease the Groove",
+brief:"Strength as a skill: frequent, fresh, submaximal practice. Strong without a gym.",
+guide:`<h4>Why</h4><p>Pavel Tsatsouline's "grease the groove": strength is a neural skill, and skills improve with frequent, non-exhausting practice. Many submaximal sets across the day build strength with minimal time, equipment, or recovery cost — ideal inside a 1–2 hour training budget.</p>
+<h4>Protocol</h4><ul>
+<li>Pick 2 movements (push-ups + pull-ups, or push-ups + bodyweight squats).</li>
+<li>Several times a day, do a set at ~50–60% of your max reps — never to failure, never sore. 4–6 sets/movement/day, spread out. Attach sets to triggers (before coffee, after bathroom, entering your room).</li>
+<li>Test max reps only once per week (log in EVALUATIONS). Everything else stays easy and crisp.</li>
+<li>Add a plank hold daily; log the weekly max.</li></ul>
+<h4>Mastery</h4><p>Max push-ups +50% from your baseline; 2-minute plank.</p>`},
+{id:"b5",domain:"BODY",tier:3,name:"Stress Inoculation",
+brief:"Deliberate, graduated discomfort — build a nervous system that stays quiet under load.",
+guide:`<h4>Why</h4><p>Stress inoculation training — psychology's version of vaccination — exposes you to controlled, escalating stressors while you practice staying regulated. Elite military selection is one long stress inoculation. The civilian version is voluntary discomfort with a calm-down protocol attached.</p>
+<h4>Protocol</h4><ul>
+<li>The ladder (one rung at a time, weeks apart): end showers 30s cold → 60s → 2min; train (safely) in weather you'd avoid; fast one meal occasionally; speak up in settings that scare you; take the stairs when tired.</li>
+<li>The rule that makes it training and not masochism: while in the stressor, run your arousal control — slow exhale, relaxed face, deliberate thought. You are practicing regulation under load, not suffering.</li>
+<li>Post-stressor: note what your mind offered ("quit" scripts) and how long until baseline. That recovery time shrinking is the metric.</li><li>Stay sensible: no breath holds in water, no extreme cold without acclimatization, nothing that conflicts with a medical condition — reckless is the opposite of controlled.</li></ul>
+<h4>Mastery</h4><p>2-minute fully-cold shower with controlled breathing and neutral face; a written log of 20 voluntary-discomfort reps with recovery notes.</p>`},
+{id:"b6",domain:"BODY",tier:3,name:"The Surge (VO2 Max)",
+brief:"Weekly high-intensity intervals — raise the ceiling, not just the base.",
+guide:`<h4>Why</h4><p>Zone 2 builds the base; brief maximal intervals raise VO2 max — the strongest single physiological predictor of longevity and high-end capacity. One session a week is enough alongside the base work.</p>
+<h4>Protocol</h4><ul>
+<li>Once weekly, after warm-up: 4×4 minutes hard (breathing too heavy to speak) with 3–4 min easy between — the "Norwegian 4×4". Bike, hill runs, rower, stairs all work.</li>
+<li>Alternative when short on time: 8–10 × 30s very hard / 90s easy.</li>
+<li>This is also Mask training: hold form and face while the body screams. Practice composure at 90% effort.</li>
+<li>Never on consecutive days; skip if sleep-deprived or ill.</li></ul>
+<h4>Mastery</h4><p>12 consecutive weeks with one surge session; measurable improvement in your repeat test (same route/machine, better output).</p>`},
+{id:"b7",domain:"BODY",tier:4,name:"Presence Engineering",
+brief:"Posture, stillness, and controlled movement — the physical layer of the Mask.",
+guide:`<h4>Why</h4><p>Before you speak, your body has already testified. Status is read within seconds from posture, movement economy, and stillness. Fidgeting broadcasts anxiety; stillness reads as control. This is trainable mechanics, not charisma.</p>
+<h4>Protocol</h4><ul>
+<li>Posture reset drill, 5×/day: stand tall as if suspended from the crown, shoulders down and back, slow exhale. Attach to door frames — every doorway is a trigger.</li>
+<li>Stillness drill: in conversations and meetings, hands quiet, no leg bounce, no self-touch. Deliberate gestures only. Start with 10-minute holds.</li>
+<li>Walk practice: slightly slower than urge, even pace, eyes level (not on the floor). The unhurried person reads as the one in control of the situation.</li>
+<li>Film yourself speaking for 2 minutes monthly. Audit: posture, filler movements, eye behavior. The camera is a merciless and perfect coach.</li></ul>
+<h4>Mastery</h4><p>A full meeting/class with zero self-touch or fidget (verified by recording or a confederate); visible difference between month-1 and month-3 videos.</p>`},
+{id:"b8",domain:"BODY",tier:5,name:"Capstone: The Standard",
+brief:"Meet the physical standard: proof the machine obeys.",
+guide:`<h4>Why</h4><p>Numbers don't negotiate. The capstone is a battery you either pass or don't — the point is possessing a body that executes what the mind orders without renegotiation.</p>
+<h4>Protocol</h4><p>Train toward all five simultaneously (your Zone 2, GTG, and Surge work already point here):</p><ul>
+<li>40 unbroken push-ups</li>
+<li>2:30 plank</li>
+<li>5 km run (or equivalent) without stopping</li>
+<li>Resting heart rate under 60</li>
+<li>2-minute cold shower, controlled breath, neutral face</li></ul>
+<p>Test monthly. Log every metric in EVALUATIONS. Adjust standards proportionally if a medical condition applies — the standard is relative ruthlessness, not injury.</p>
+<h4>Mastery</h4><p>All five on the same day.</p>`},
+
+/* ================= STRATEGY ================= */
+{id:"t1",domain:"STRATEGY",tier:1,name:"Bias Inventory",
+brief:"Your brain ships with systematic bugs. An operator who doesn't know his own failure modes is a liability.",
+guide:`<h4>Why</h4><p>The CIA's analytic tradecraft literature exists for one reason: even brilliant, motivated analysts fail in predictable ways — confirmation bias, anchoring, availability, sunk cost, overconfidence, fundamental attribution error. Debiasing starts with recognition in the wild, not definitions in a book.</p>
+<h4>Protocol</h4><ul>
+<li>Learn the core dozen (card them): confirmation, anchoring, availability, sunk cost, overconfidence, hindsight, attribution error, halo, loss aversion, base-rate neglect, planning fallacy, motivated reasoning.</li>
+<li>Daily spotting: log 1 bias caught in others AND 1 in yourself (the second is the hard one and the entire point).</li>
+<li>Weekly review: which bias recurs in you? That's your primary failure mode — design one guard for it (e.g., anchoring → always generate your own estimate before hearing others').</li></ul>
+<h4>Mastery</h4><p>All 12 defined with examples from memory; 30-day spotting log; a written personal top-3 failure-mode list with countermeasures.</p>`},
+{id:"t2",domain:"STRATEGY",tier:2,name:"Analytic Tradecraft",
+brief:"The CIA's structured analytic techniques: Key Assumptions Check, ACH, Devil's Advocacy.",
+guide:`<h4>Why</h4><p>The declassified <i>Tradecraft Primer</i> (CIA, 2009) teaches externalizing your reasoning so it can be inspected and attacked. Three techniques cover most personal decisions:</p>
+<h4>Protocol</h4><ul>
+<li><b>Key Assumptions Check:</b> for any plan, list every assumption it rests on. For each: what's the evidence? what happens if it's wrong? Most plans die here, cheaply.</li>
+<li><b>Analysis of Competing Hypotheses (ACH):</b> for any "why did X happen / what's really going on" question — list ALL plausible hypotheses in a grid vs. the evidence, then work to <i>refute</i> each rather than confirm your favorite. The surviving hypothesis wins. (Evidence on ACH's debiasing power is mixed — its real value is forcing you to generate alternatives at all.)</li>
+<li><b>Devil's Advocacy / Premortem:</b> before committing, write the memo from one year later explaining why it failed. Assign someone (or yourself, formally) to argue the opposite of your conclusion.</li>
+<li>Run one technique per week on a real question in your life. Keep the worksheets.</li></ul>
+<h4>Mastery</h4><p>6 completed worksheets (2 per technique) on real decisions, with outcomes reviewed later.</p>`},
+{id:"t3",domain:"STRATEGY",tier:2,name:"Calibration",
+brief:"Superforecaster training: know exactly how much you don't know, in numbers.",
+guide:`<h4>Why</h4><p>Tetlock's superforecasters beat intelligence analysts with classified access — using calibration: assigning honest probabilities and scoring themselves. A calibrated mind knows when 60% sure and when 95%, and never confuses the two. Most people run at "definitely" and are wrong constantly.</p>
+<h4>Protocol</h4><ul>
+<li>Daily micro-forecasts (2 min): predict 2 small things with a probability — "70% the meeting runs over", "90% I finish the protocol today". Score them at day's end.</li>
+<li>Always start from the base rate (how often does this happen in general?) then adjust — inside view last, never first.</li>
+<li>Use granular probabilities (63%, not "likely"). Vague words are where self-deception lives.</li>
+<li>Track your calibration curve monthly: of your "80%" claims, did ~80% happen? Log your score in EVALUATIONS.</li><li>Optional: join Good Judgment Open or Metaculus and forecast real events against real people.</li></ul>
+<h4>Mastery</h4><p>100 scored forecasts; calibration within ±10 points at every confidence band.</p>`},
+{id:"t4",domain:"STRATEGY",tier:3,name:"Game Theory",
+brief:"Dominant strategies, credible threats, and why the iterated game changes everything.",
+guide:`<h4>Why</h4><p>Most social situations are games with structures: one-shot vs. iterated, zero-sum vs. positive-sum, complete vs. incomplete information. People who can't see the structure play checkers in a chess world. Ayanokoji's signature is recognizing which game is actually being played.</p>
+<h4>Protocol</h4><ul>
+<li>Core concepts to learn and card (one per week): prisoner's dilemma and why iteration + reputation flips it; tit-for-tat with forgiveness; Nash equilibrium; credible commitment (burning bridges as strategy); Schelling points; zero-sum vs. positive-sum recognition; information asymmetry; backward induction.</li>
+<li>Weekly analysis drill: take one real situation (office politics, a negotiation, a group project) and write its game structure — players, payoffs, information, one-shot or repeated. The answer usually falls out of the structure.</li>
+<li>Play: the dedicated Chess (tiers 2–3) and Poker (tiers 3–4) nodes are your laboratory — these concepts stop being abstractions on a board and at a table. Log ratings monthly.</li></ul>
+<h4>Mastery</h4><p>8 concepts explained from memory with real examples; 8 written game-structure analyses of live situations; measurable rating climb in your chosen game.</p>`},
+{id:"t5",domain:"STRATEGY",tier:3,name:"The OODA Loop",
+brief:"Boyd's Observe–Orient–Decide–Act: victory belongs to whoever cycles faster and cleaner.",
+guide:`<h4>Why</h4><p>Fighter pilot John Boyd's insight: conflict is competing decision cycles. Whoever observes reality more accurately, reorients faster when wrong, and acts before the opponent's model updates — wins, even with fewer resources. "Orient" (your mental models, biases, and assumptions) is the part everything else in this curriculum upgrades.</p>
+<h4>Protocol</h4><ul>
+<li>Debrief format (use in your evening review): for any situation that went sideways — where did the loop break? Didn't see it (Observe)? Saw it but misread it (Orient)? Read it but dithered (Decide)? Decided but flinched (Act)?</li>
+<li>Tempo drill: in low-stakes decisions (menus, routes, purchases under a threshold), decide in ≤10 seconds. Train the Act muscle where mistakes are free.</li>
+<li>Disruption literacy: notice when someone controls your tempo — rushing you, flooding you with options, manufacturing deadlines. The counter is always the same: step out, slow down, re-orient.</li></ul>
+<h4>Mastery</h4><p>30 evening debriefs using the loop; documented improvement in a recurring weak stage.</p>`},
+{id:"t6",domain:"STRATEGY",tier:4,name:"Negotiation Architecture",
+brief:"BATNA, ZOPA, anchors — the structural layer under the tactical empathy tools.",
+guide:`<h4>Why</h4><p>Tactical empathy (SOCIAL tier 3) is the interface; this is the engine. Negotiation outcomes are mostly determined before anyone speaks — by alternatives, information, and framing.</p>
+<h4>Protocol</h4><ul>
+<li><b>BATNA:</b> before any negotiation, write your Best Alternative To a Negotiated Agreement. Your power equals your willingness to walk, and both sides can smell it. Improving your BATNA off-table beats any tactic on-table.</li>
+<li><b>ZOPA:</b> estimate the zone of possible agreement — their walk-away and yours. All bargaining happens inside it.</li>
+<li><b>Anchoring:</b> first credible number frames everything after it. Anchor first when you know the ZOPA; make them anchor when you don't. Extreme-but-justifiable beats modest.</li>
+<li><b>Trades over splits:</b> never just split the difference — find what's cheap for you and valuable to them, and trade asymmetries.</li>
+<li>Practice ladder: negotiate small things weekly (market stalls, subscriptions, fees) → then something real. Full written prep sheet each time.</li></ul>
+<h4>Mastery</h4><p>10 prepared negotiations with prep sheets and outcomes; at least one significant win directly attributable to preparation.</p>`},
+{id:"t7",domain:"STRATEGY",tier:4,name:"Second-Order Engine",
+brief:"And then what? Inversion, premortems, and thinking past the first move.",
+guide:`<h4>Why</h4><p>First-order thinking is what everyone does: "this action → this result." Consequences have consequences. The habit of asking "and then what?" — plus inversion ("how would I guarantee failure?") — is most of what passes for strategic genius.</p>
+<h4>Protocol</h4><ul>
+<li>For every significant decision, write consequences three orders deep: immediate → response of other actors → equilibrium after everyone adjusts.</li>
+<li>Inversion drill (weekly): take a goal and write the anti-plan — the 5 most reliable ways to fail at it. Then check which you're currently doing.</li>
+<li>Incentive audit: for any confusing behavior by any person or institution, write down what they're actually incentivized to do. Behavior stops being confusing.</li>
+<li>Chesterton's Fence: before removing any rule/habit/system, state what it was protecting. Then decide.</li></ul>
+<h4>Mastery</h4><p>12 three-order analyses; 8 inversions; 3 documented cases where second-order thinking changed your decision.</p>`},
+{id:"tg1",domain:"STRATEGY",tier:2,name:"Chess I — Tactical Foundation",
+brief:"Below master level, chess games are decided by tactics. Build the pattern library first.",
+guide:`<h4>Why</h4><p>Chess is the cleanest training ground for calculation discipline: complete information, zero luck, and a rating that measures you without mercy. Studies of amateur games show the overwhelming majority are decided by tactical blunders — so pattern recognition comes before everything else.</p>
+<h4>Protocol</h4><ul>
+<li><b>Daily tactics (15 min, in your Chess Lab block or spare gaps):</b> lichess or chess.com puzzles. Iron rule: calculate the FULL line before touching a piece — a right answer after hope-clicking counts as a miss.</li>
+<li><b>Woodpecker principle:</b> re-solve the same puzzle set in cycles, faster each pass — spaced repetition applied to patterns. Miss a puzzle twice? Card its motif (fork, pin, deflection, back rank…) into Anki.</li>
+<li><b>Play:</b> 2–3 rapid games weekly (10+5 or slower). One long game teaches more than twenty bullet games; bullet is entertainment, not training.</li>
+<li><b>Openings:</b> principles only below ~1400 — control the center, develop everything, castle early, don't move the same piece twice. Memorized lines are a crutch that collapses on move 8.</li>
+<li><b>Blunder-check ritual (the habit that adds 200 rating):</b> before EVERY move — their checks, captures, threats; then yours.</li>
+<li><b>Endgame basics:</b> K+Q and K+R mates executed cold; opposition; the square of the pawn.</li></ul>
+<h4>Mastery</h4><p>Puzzle rating 1500+ (lichess) sustained for two weeks; both basic mates in under 30 seconds against the computer; 30 days of tactics logged.</p>`},
+{id:"tg2",domain:"STRATEGY",tier:3,name:"Chess II — The Analysis Engine",
+brief:"Rating comes from removing your errors, not adding brilliance. Systematic loss analysis.",
+guide:`<h4>Why</h4><p>Improvement past the tactics plateau comes from a feedback loop most players refuse to run: honest autopsy of every loss. This is the OODA debrief applied to a board.</p>
+<h4>Protocol</h4><ul>
+<li><b>The autopsy ritual:</b> every loss gets analyzed — first WITHOUT the engine (find the turning move and your own explanation), only then engine-check. Log: turning move, why you missed it (pattern gap? time pressure? tilt?). File the pattern into your puzzle deck.</li>
+<li><b>Guess-the-move (1/week):</b> take an annotated master game, cover the moves, predict each one, score yourself. This is calibration training on chess.</li>
+<li><b>Endgame technique:</b> Lucena and Philidor positions, rook activity, converting a pawn up. Endgames are where cheap rating lives.</li>
+<li><b>Clock discipline:</b> time is a resource; log time-pressure blunders separately — they're a composure failure, not a chess failure, and the Mask work applies.</li>
+<li><b>Thought checklist</b> drilled until automatic: threat? candidate moves (3)? calculate forcing lines first? blunder-check? then move.</li></ul>
+<h4>Mastery</h4><p>20 analyzed losses with written turning points; guess-the-move hitting ≥40% vs master games; +100 rating from your recorded baseline.</p>`},
+{id:"tg3",domain:"STRATEGY",tier:3,name:"Poker I — The Mathematics of Profit",
+brief:"Poker is decision quality under uncertainty, measured in EV. Learn the math before the mind games.",
+guide:`<h4>Why</h4><p>Poker trains what chess cannot: decisions with hidden information, probabilistic thinking with real feedback, and emotional control with stakes attached. Played correctly it is applied game theory; played casually it is gambling. The difference is this node.</p>
+<h4>Protocol</h4><ul>
+<li><b>EV doctrine:</b> judge every decision by expected value, never by the outcome of one hand. A good fold that would have won is still a good fold. Card this until it's reflex.</li>
+<li><b>Tight-aggressive baseline:</b> play few hands, play them hard. Fold is your most profitable button for the first 10,000 hands.</li>
+<li><b>Position:</b> the button is the best seat at the table; early position plays a fraction of hands. Study standard open ranges per position (free charts everywhere) and drill them into Anki until recitable.</li>
+<li><b>Pot odds & equity:</b> count outs, rule of 2-and-4, compare price against equity. Every call must justify itself arithmetically. 20 drill problems weekly.</li>
+<li><b>Bankroll doctrine — non-negotiable:</b> play-money or microstakes until proven; never buy in for more than ~3–5% of a dedicated bankroll (30+ buy-ins for cash games); predetermined stop-loss per session; never chase losses. This wall is what makes poker training instead of gambling — if the wall ever fails you, stop playing for money entirely.</li>
+<li><b>Legality:</b> real-money play only where legal for your age and jurisdiction. Play-money serves the training goal fully — the skill is in the decisions, not the stakes.</li></ul>
+<h4>Mastery</h4><p>Position ranges recited from memory; 20 pot-odds drills at ≥90%; 5,000 logged hands (play-money counts) with histories saved for review.</p>`},
+{id:"tg4",domain:"STRATEGY",tier:4,name:"Poker II — Exploitation & The Mask",
+brief:"Read ranges, exploit leaks, and hold the Mask while variance tries to break it.",
+guide:`<h4>Why</h4><p>Advanced poker is the full White Room stack in one chair: hand reading (SOCIAL baselining), GTO vs exploitation (game theory), tilt control (arousal regulation), and variance literacy (calibration). No other single activity integrates more of this curriculum.</p>
+<h4>Protocol</h4><ul>
+<li><b>Hand reading:</b> narrow the opponent's range street by street — every action filters. In review, state the range out loud at each street. Vague reads ("he has something") are forbidden; ranges are lists.</li>
+<li><b>GTO baseline, exploitative profit:</b> learn balanced play as the default, then deviate deliberately against identified leaks — someone who calls too much gets value-bet bigger and bluffed never. Write the read before you exploit it.</li>
+<li><b>Session review ritual:</b> mark your 3 biggest pots each session; re-analyze off-table with a free equity calculator; identify and target ONE leak per week.</li>
+<li><b>Tilt protocol (this is Mask training under live fire):</b> predetermined stop-loss in buy-ins AND minutes; at the tilt trigger — physiological sigh, stand up, walk. Keep a tilt log: trigger, body signal, action taken. Ten controlled instances is worth more than any strategy book.</li>
+<li><b>Live tells:</b> bet sizing and timing tell more than faces; baseline opponents in the first orbit like SOCIAL tier 1 taught you, then watch for deviations in big pots.</li>
+<li><b>Variance literacy:</b> draw no conclusion about your skill from fewer than ~10,000 hands. Track EV, not results, or the noise will teach you lies.</li></ul>
+<h4>Mastery</h4><p>20 written hand reviews with street-by-street ranges; tilt log with 10 triggered-and-controlled instances; one leak identified, exploited, and documented in results.</p>`},
+{id:"t8",domain:"STRATEGY",tier:5,name:"Capstone: The Operation",
+brief:"Plan and execute a real 6-week objective using the entire stack. The White Room graduates on results.",
+guide:`<h4>Why</h4><p>Knowledge that hasn't produced an outcome is decoration. The capstone is a real operation: one meaningful objective, formally planned and executed with every tool in this program.</p>
+<h4>Protocol</h4><ul>
+<li>Choose an objective with a verifiable win condition, 6 weeks out: a grade, a job/internship, a competition, a business milestone, a public performance.</li>
+<li>Write the operations order: objective → key assumptions check → competing hypotheses on the main obstacle → stakeholder map with levers (SOCIAL) → calibrated probability of success → premortem → weekly OODA checkpoints.</li>
+<li>Execute. Every week: debrief, re-orient, update the plan and your probability estimate. Deploy the full stack deliberately — memory for material, deep work for output, the Mask and tactical empathy for the humans involved, arousal control for the pressure points.</li>
+<li>Afterward: full written after-action review — what the plan got right, where the loop broke, what the next operation inherits.</li></ul>
+<h4>Mastery</h4><p>One completed operation with full documentation, win or lose — plus the honest after-action review. Then set the next one. This loop, repeated for years, is the entire secret.</p>`}
+];
+/* =====================================================
+   DATA — DAILY DRILLS & WEEKLY SCHEDULE (1–2 h/day)
+   ===================================================== */
+const DRILLS = {
+  // Core — every day (~25 min)
+  cal:  {name:"Morning Calibration", dom:"CORE", min:8,  desc:"5 min box breathing (4-4-4-4), then write today's single most important objective and 2 probability micro-forecasts."},
+  kim:  {name:"Kim's Game",          dom:"CORE", min:5,  desc:"30s observation of any scene → look away → list everything → verify. Increase items, decrease time weekly."},
+  sr:   {name:"Retrieval Review",    dom:"CORE", min:10, desc:"Anki / Leitner box review. Non-negotiable. Add today's new knowledge as cards."},
+  dbf:  {name:"Evening Debrief",     dom:"CORE", min:5,  desc:"Score your forecasts. One OODA note: where did today's loop break? One bias caught in yourself. Tomorrow's objective."},
+  // Rotating blocks
+  mem:  {name:"Memory Systems Block", dom:"MIND", min:30, desc:"Current memory node: palace drills, Major System pegs, or card deck work per your curriculum tier."},
+  dnb:  {name:"Dual N-Back",          dom:"MIND", min:15, desc:"Brain Workshop or app. Fresh brain only. Log average n-level in weekly evaluation."},
+  math: {name:"Combat Math",          dom:"MIND", min:15, desc:"20 timed two-digit multiplications + one mental-math technique rep. Fridays: add a Fermi estimate."},
+  deep: {name:"Deep Work Block",      dom:"MIND", min:45, desc:"One objective, phone exiled, distraction tally on paper. Use the timer below. Extend 5 min weekly."},
+  feyn: {name:"Feynman Extraction",   dom:"MIND", min:25, desc:"Explain one concept from scratch, no jargon. Find gaps, patch, compress to one sentence, card it."},
+  z2:   {name:"Zone 2 Engine",        dom:"BODY", min:45, desc:"Conversational-pace cardio. Talk test or HR ~180−age. Stack with audiobooks or observation practice."},
+  gtg:  {name:"Grease the Groove",    dom:"BODY", min:10, desc:"Spread through the day: 4–6 easy sets of push-ups/pulls/squats at 50–60% max. Never to failure. Plus 1 plank."},
+  surge:{name:"The Surge (4×4)",      dom:"BODY", min:30, desc:"Warm up, then 4×4 min hard / 3 min easy. Hold your form and face. Not if sleep-deprived."},
+  sit:  {name:"Stress Inoculation",   dom:"BODY", min:5,  desc:"Current rung of your discomfort ladder (cold finish, etc.) with controlled breath and neutral face. Note recovery time."},
+  obs:  {name:"Field Observation",    dom:"SOCIAL", min:15, desc:"In public/class/work: baseline one person, spot 2 influence levers in the wild, reconstruct one scene after leaving."},
+  soc:  {name:"Social Technique Block",dom:"SOCIAL", min:30, desc:"Current social node: elicitation practice, mirroring/labeling reps, lever study, or reading classification drills."},
+  strat:{name:"Strategy Block",       dom:"STRATEGY", min:30, desc:"Current strategy node: tradecraft worksheet, game-structure analysis, or negotiation prep on a real situation."},
+  game: {name:"Chess Lab",            dom:"STRATEGY", min:20, desc:"Tactics puzzles (full calculation, no hope-clicks), a rapid game, or loss autopsy — per your chess node tier."},
+  poker:{name:"Poker Lab",            dom:"STRATEGY", min:20, desc:"Range recitation, pot-odds drills, or session review with range analysis — per your poker node tier. Decisions over outcomes."},
+  read: {name:"Doctrine Reading",     dom:"STRATEGY", min:20, desc:"Current book from the reading list (Doctrine tab). Card every keeper idea into spaced repetition."},
+  eval: {name:"Weekly Evaluation",    dom:"CORE", min:30, desc:"Run the assessment battery in EVALUATIONS and record every metric. The numbers are the truth; feelings are noise."}
+};
+/* Step-by-step execution instructions per drill */
+const STEPS = {
+ cal:[ "Sit upright, feet flat. Box breathing: inhale through the nose 4s → hold 4s → exhale 4s → hold 4s. Repeat for 5 minutes (use the timer, 5m preset).",
+   "On paper or a note: write ONE sentence — today's single most important objective. Not three. One.",
+   "Log 2 micro-forecasts about today in the Forecast Ledger (EVALUATIONS tab) with a probability each, e.g. '80% — I complete the full protocol'. You will score them tonight.",
+   "Stand up. The day is now on rails." ],
+ kim:[ "Pick any scene you haven't studied: a shelf, a desk, a shop window, a stranger's table.",
+   "Study it for exactly 30 seconds (count or time it). Actively name objects, positions, colors, text.",
+   "Turn away or close your eyes. Write/say everything: items, where they were, details.",
+   "Verify against the scene. Count hits and misses — that's your score.",
+   "Progression: when you reliably get 90%, add more objects, cut viewing time to 20s, or delay recall by an hour." ],
+ sr:[ "Open Anki (or your Leitner box). Review EVERY due card — attempt the answer from memory before flipping. No peeking, no 'I basically knew it'.",
+   "Grade honestly: a hesitation is a 'hard', a miss is a 'fail'. The algorithm only works on honest input.",
+   "Add cards for anything worth keeping from yesterday: names, facts, techniques from this program, book ideas. One fact per card, phrased as a question.",
+   "If you have no deck yet: install Anki today and make your first 10 cards from the Bias Inventory or Major System digit-sounds." ],
+ dbf:[ "Score this morning's forecasts in the Forecast Ledger (EVALUATIONS tab): ✓ true or ✗ false. The ledger computes your calibration automatically.",
+   "One OODA note: pick the day's roughest moment — did you fail to Observe, misread it (Orient), hesitate (Decide), or flinch (Act)? One sentence.",
+   "Name one bias you caught in yourself today (anchoring, sunk cost, motivated reasoning…). If you caught none, that's the bias.",
+   "Write tomorrow's single objective. Close the notebook. Done means done." ],
+ mem:[ "Open your current MIND memory node in the Curriculum tab (start: Method of Loci) and follow its protocol — this block is that node's practice time.",
+   "Default drill if in doubt: generate 20 random words (any online generator). Walk them into your palace — one vivid, absurd, moving image per locus.",
+   "Recall the full list forward, then backward. Note time and errors.",
+   "If on the Major System: drill 10 new number-pegs into Anki, then memorize a 20-digit string via images.",
+   "End by logging: what broke — weak image, skipped locus, rushed encoding? Fix that specific thing tomorrow." ],
+ dnb:[ "Open Brain Workshop (free, desktop) or any dual n-back app. Do this fresh — never as a tired-brain filler.",
+   "Set dual n-back mode (position + audio). Start where the app left you; beginners start at 2-back.",
+   "Play ~15 minutes. It should feel like your brain is at its limit — that strain is the training stimulus, not a sign you're failing.",
+   "Don't chase streaks with tricks (chunking rhythms); play it straight or the transfer disappears.",
+   "Note your average n-level; you'll log it in Sunday's evaluation." ],
+ math:[ "Generate 20 two-digit × two-digit problems (random.org, dice, or ask someone). No calculator, no paper for intermediate steps — mental only, write final answers.",
+   "Start the timer. Work left-to-right (40×30 first, then corrections), not school-style right-to-left.",
+   "Check answers. Record time and accuracy. Under 4 min at 90%+ is the standard.",
+   "Then 5 minutes on this week's technique: ×11 trick, squares ending in 5, difference of squares (47×53 = 50²−9), or percentage flips.",
+   "Friday extra: one Fermi estimate ('how many X in this city?') — decompose, estimate a range, then look up the truth and score yourself." ],
+ deep:[ "Write the block's ONE objective on paper. If you can't state it in a sentence, you're not ready to start.",
+   "Phone: different room. Tabs: closed. Tell people you're gone.",
+   "Set the timer (below) to your current duration. Untrained: 25m. Add 5 min each week you hit every session; target 90.",
+   "Keep a paper tally: every urge to switch/check gets a tick, then you RETURN to the work. The return is the rep.",
+   "When the timer ends: stop, count ticks, then take a genuinely idle break — walk, window, nothing with a screen." ],
+ feyn:[ "Pick one concept — from your field, your reading, or a foreign domain (rotate: economics, biology, law, physics, history).",
+   "Blank page: explain it as if to a sharp 12-year-old. Jargon is forbidden — jargon is where gaps hide.",
+   "Mark every stall or hand-wave. Those are your gaps. Go back to the source ONLY for those.",
+   "Re-explain until smooth. Then compress: one paragraph → one sentence.",
+   "Card the sentence into Anki. The concept is now yours, not the book's." ],
+ z2:[ "Pick a rhythmic modality: brisk incline walk, easy run, bike, rower.",
+   "Warm up 5 min, then settle at conversational pace — you can speak in sentences but would rather not. HR ceiling ≈ 180 minus your age.",
+   "Hold it 45–60 min. The discipline IS the drill: when you feel like pushing harder, don't. Harder is a different workout and mostly ego.",
+   "Stack it: audiobook from the reading list, or (outdoors) run observation practice on your surroundings.",
+   "Note weekly total minutes — 150+ is the effective dose. Log resting HR Sunday." ],
+ gtg:[ "Two movements today (e.g., push-ups + squats, or push-ups + pull-ups).",
+   "Through the day, do 4–6 easy sets per movement at 50–60% of your max reps. If your max is 20 push-ups, sets of 10–12.",
+   "Never to failure, never grinding, never sore. Each set should feel crisp — you're practicing strength like a skill, not exhausting it.",
+   "Attach sets to triggers: before coffee, after bathroom, entering your room.",
+   "Finish the day with one plank hold, stopping 10s before failure. Max-test everything only on Sunday." ],
+ surge:[ "Warm up 10 min easy, then 2–3 short pickups.",
+   "4 rounds: 4 minutes HARD (can't speak more than a word or two) → 3 minutes easy spin/walk. Bike, hill, rower, or stairs.",
+   "During the hard minutes, run Mask training: jaw loose, face neutral, breathing deliberate. Composure at 90% effort is the hidden rep.",
+   "Cool down 5 min. Note your output (distance/watts/laps) — same test, better number, is the goal.",
+   "Skip if sleep-deprived or ill. Never two days in a row." ],
+ sit:[ "Identify your current rung of the discomfort ladder (start: 30s cold shower finish).",
+   "Enter the stressor deliberately. Immediately run regulation: long slow exhales, relaxed face, deliberate thoughts. You're training regulation under load, not suffering.",
+   "Notice the 'quit' scripts your mind offers. Observe them like weather. Stay the planned duration — not longer.",
+   "Afterward, note how long until you felt normal. That recovery time shrinking is the real metric.",
+   "Move up a rung only after a week of controlled reps at the current one. Reckless is the opposite of trained." ],
+ obs:[ "Pick your venue: class, office, café, transit — anywhere with people.",
+   "Baseline one person (someone you'll see again): speech pace, gesture level, eye contact, posture, humor. Log 5 traits mentally, write them later.",
+   "Spot 2 influence levers in the wild: an ad using scarcity, a colleague using social proof, a menu using anchoring. Name the lever.",
+   "On leaving, reconstruct the room: how many people, exits, who sat where, who seemed off. Verify what you can.",
+   "Stay in Condition Yellow throughout — relaxed, aware, unreadable." ],
+ soc:[ "Open your current SOCIAL node in the Curriculum tab — this block executes that node's drill.",
+   "Elicitation week: deploy ONE technique (deliberate error, bracketing, reciprocal disclosure) in a zero-stakes chat. Goal: learn one true thing without asking a direct question.",
+   "Tactical empathy week: 3 mirrors + 2 labels in real conversations. Count them.",
+   "Levers week: read the chapter, then deliberately and honestly apply one lever once.",
+   "Log every rep in a notebook: what you tried, what happened, what you'd change. Unlogged practice is anecdote." ],
+ strat:[ "Open the WORKSHEETS tab and run your current STRATEGY node's technique on a LIVE situation from your life — never a hypothetical.",
+   "Tradecraft: file a Key Assumptions Check or ACH on a real decision.",
+   "Game theory: file a Game Structure Analysis — players, payoffs, information, one-shot or repeated.",
+   "Negotiation: file a full Prep Sheet (BATNA, walk-aways, anchor, trades) for something you'll actually negotiate.",
+   "Sunday: reopen the worksheet and check whether reality agreed with your analysis (file an After-Action Review for anything big)." ],
+ game:[ "Open your current Chess node in the Curriculum tab — this block executes its protocol.",
+   "Default split: 12 min tactics (calculate the full line before moving; a lucky guess is a miss), then 8 min on your tier's focus — basic mates, endgame positions, or guess-the-move.",
+   "Game days (2–3×/week): one rapid game (10+5 or slower) INSTEAD of tactics. Run the blunder-check ritual — checks, captures, threats — before every single move.",
+   "After any loss: find the turning move yourself BEFORE consulting the engine. One sentence on why you missed it; card the pattern.",
+   "Log puzzle rating and game rating in Sunday's evaluation." ],
+ poker:[ "Open your current Poker node in the Curriculum tab — this block executes its protocol.",
+   "Poker I: recite 3 position ranges from memory, then 10 pot-odds problems (count outs, rule of 2-and-4, call or fold with the math written down).",
+   "Poker II: review your 3 biggest pots of the week — state the opponent's range street by street out loud, then check with an equity calculator.",
+   "Play sessions (optional, within bankroll doctrine — play-money fully counts): tight-aggressive, position-aware, predetermined stop-loss in buy-ins AND minutes.",
+   "Any tilt flicker: physiological sigh, stand, walk. Log it — trigger, signal, action. That log IS the Mask curriculum.",
+   "Log hands reviewed in Sunday's evaluation. Judge yourself on decision quality, never on one session's results." ],
+ read:[ "Current book from the Doctrine reading list, 20 minutes, pen in hand.",
+   "Read for keeps: mark every idea worth owning. Speed is irrelevant; retention is everything.",
+   "After the session, convert marked ideas into Anki cards (question form) — 2–5 cards per session.",
+   "Once per book, do a Feynman extraction on its central idea.",
+   "One book at a time, in list order. Finishing beats starting." ],
+ eval:[ "Go to the EVALUATIONS tab. Same conditions every week: same time of day, rested, quiet.",
+   "Run the full battery in order — mind tests first (fresh brain), then body tests, then records. Metrics with ▶ RUN TEST are administered and scored by the program itself; the physical/external ones you test as instructed and enter.",
+   "Record every number, including the bad ones. Especially the bad ones — a flattered graph teaches nothing.",
+   "Compare to last week: one metric improving, one stalling. For the stalled one, change ONE variable in next week's training.",
+   "Finish with 10 minutes of planning: next week's node focuses and any ladder progressions (deep work +5min, cold +30s, n-back level)." ]
+};
+/* Related curriculum node per drill (jump link) */
+const NODELINK = { mem:"m3", dnb:"m5", math:"m6", deep:"m2", feyn:"m7", sr:"m1",
+  z2:"b3", gtg:"b4", surge:"b6", sit:"b5", cal:"b2",
+  kim:"s1", obs:"s2", soc:"s3", dbf:"t5", strat:"t2", game:"tg1", poker:"tg3", eval:"t3" };
+const CORE = ["cal","kim","sr","dbf"];
+const SCHEDULE = { // day 0=Sunday
+  1:{title:"MIND — MEMORY & CAPACITY",    drills:["mem","dnb","gtg"]},
+  2:{title:"BODY — ENGINE",               drills:["z2","sit","read"]},
+  3:{title:"SOCIAL — FIELDWORK",          drills:["obs","soc","gtg"]},
+  4:{title:"STRATEGY — TRADECRAFT",       drills:["strat","game","gtg"]},
+  5:{title:"MIND — DEPTH",                drills:["deep","math","feyn"]},
+  6:{title:"BODY — SURGE & FIELD",        drills:["surge","z2","obs"]},
+  0:{title:"EVALUATION & POKER LAB",      drills:["eval","poker","gtg"]}
+};
+
+/* =====================================================
+   DATA — EVALUATION METRICS (weekly battery)
+   ===================================================== */
+const METRICS = [
+ {id:"digit", name:"Digit Span (backward)", unit:"digits", dir:1, dom:"MIND",
+  how:"Have someone read (or use an app to show) random digit strings, 1/sec. Repeat them BACKWARD. Start at 3, climb until you fail twice at a length. Record the longest length passed."},
+ {id:"words", name:"20-Word List Time", unit:"min", dir:-1, dom:"MIND",
+  how:"Generate 20 random words. Memorize with your palace until perfect forward recall. Record total minutes. (Once mastered, switch to 30 digits or a card deck.)"},
+ {id:"mathT", name:"20 Multiplications Time", unit:"min", dir:-1, dom:"MIND",
+  how:"20 random two-digit × two-digit problems, mental only, write answers. Record minutes; only count if accuracy ≥90%."},
+ {id:"focus", name:"Longest Clean Focus Block", unit:"min", dir:1, dom:"MIND",
+  how:"Longest single deep-work block this week with ≤3 distraction ticks."},
+ {id:"nback", name:"Dual N-Back Level", unit:"n", dir:1, dom:"MIND",
+  how:"Your average n-level across this week's sessions."},
+ {id:"kimS", name:"Kim's Game Score", unit:"/20", dir:1, dom:"SOCIAL",
+  how:"Formal weekly test: 20 objects, 60 seconds of study, 30-minute delay, then list. Record items correctly recalled."},
+ {id:"reads", name:"Confirmed Reads This Week", unit:"count", dir:1, dom:"SOCIAL",
+  how:"Baseline-deviation reads or inference hypotheses you logged AND later confirmed true."},
+ {id:"push", name:"Max Push-ups", unit:"reps", dir:1, dom:"BODY",
+  how:"One all-out set, full range, once a week only."},
+ {id:"plank", name:"Plank Hold", unit:"sec", dir:1, dom:"BODY",
+  how:"Single max hold, straight line, breathing controlled."},
+ {id:"rhr", name:"Resting Heart Rate", unit:"bpm", dir:-1, dom:"BODY",
+  how:"Measure on waking, before rising: 60 seconds, fingers on wrist or any HR device."},
+ {id:"cold", name:"Cold Exposure (controlled)", unit:"sec", dir:1, dom:"BODY",
+  how:"Longest cold-water finish this week with slow breathing and neutral face. Control is the metric, not suffering."},
+ {id:"sleep", name:"Average Sleep", unit:"h", dir:1, dom:"BODY",
+  how:"This week's nightly average, honest estimate or tracker."},
+ {id:"calib", name:"Forecast Calibration", unit:"%", dir:1, dom:"STRATEGY",
+  how:"Of this week's scored micro-forecasts: percentage correct at your stated confidence (rough proxy: overall hit rate vs. average stated confidence — closer is better; record hit rate)."},
+ {id:"chess", name:"Chess Rating", unit:"elo", dir:1, dom:"STRATEGY",
+  how:"Current rapid rating on lichess or chess.com. Record weekly; judge the trend monthly — rating noise week-to-week is normal."},
+ {id:"tactics", name:"Puzzle Rating", unit:"elo", dir:1, dom:"STRATEGY",
+  how:"Current tactics/puzzle rating on your chess platform. The purest measure of your pattern library."},
+ {id:"pokerH", name:"Poker Hands Reviewed", unit:"count", dir:1, dom:"STRATEGY",
+  how:"Hands given a full written review this week (street-by-street range + equity check). Quality reviews compound; raw hands played don't."}
+];
+
+/* =====================================================
+   DATA — RANKS & DIRECTIVES
+   ===================================================== */
+const RANKS = [
+ {lv:1,  name:"SPECIMEN",   note:"Unmeasured raw material."},
+ {lv:3,  name:"CANDIDATE",  note:"Compliance established. Potential unproven."},
+ {lv:6,  name:"ADEPT",      note:"Baseline exceeded. Ordinary people now notice."},
+ {lv:10, name:"OPERATOR",   note:"Multiple domains functional under pressure."},
+ {lv:15, name:"STRATEGIST", note:"You see the board, not the pieces."},
+ {lv:21, name:"GHOST",      note:"Capability concealed at will. Nobody sees you coming."},
+ {lv:28, name:"MASTERPIECE",note:"The curriculum has nothing left to teach. Set your own."}
+];
+const DIRECTIVES = [
+ "Talent is the story spectators tell about work they didn't witness.",
+ "The one who controls the tempo of a conversation controls its outcome.",
+ "Do not show your strength. Strength revealed is strength halved.",
+ "Feelings are data about you, not about the situation.",
+ "Everyone you meet is running on levers. So are you. The difference is knowing it.",
+ "A missed day is data. A justified missed day is a defeat.",
+ "Observe first. The person who speaks first in ignorance pays for the lesson.",
+ "Your future self is the only judge whose verdict matters. He is watching today.",
+ "Comfort is a debt collected with interest.",
+ "The board is always bigger than the game your opponent thinks you are playing.",
+ "Never confuse being busy with being effective. The White Room measures output.",
+ "Composure is not the absence of feeling. It is the refusal to be operated by it.",
+ "What you cannot explain simply, you do not own.",
+ "The average person confirms. The trained mind refutes.",
+ "Losing calmly teaches more than winning loudly.",
+ "Every environment is information. Most people walk through it blind.",
+ "Do the boring reps. Mastery is repetition wearing a disguise.",
+ "An excuse and a reason feel identical from the inside. Score outcomes instead.",
+ "Slow is smooth. Smooth is fast.",
+ "Power that must announce itself is weakness with a megaphone.",
+ "You are not tired. You are untrained. Continue.",
+ "The map of the room is worth more than the loudest voice in it.",
+ "Predict, then verify. A mind that never scores itself never improves.",
+ "Silence is a complete sentence. Learn to end on it.",
+ "Whatever you feed daily becomes the strongest thing in you. Audit the feed.",
+ "First understand the incentives. Behavior is rarely mysterious afterward.",
+ "The strongest move is often to be underestimated on purpose.",
+ "Your rivals rest on schedules. Advantage compounds in the gaps."
+];
+/* =====================================================
+   STATE
+   ===================================================== */
+const KEY="whiteroom_v1";
+let S = load();
+function load(){
+  try{ const s = JSON.parse(localStorage.getItem(KEY)); if(s && s.designation) return s; }catch(e){}
+  return null;
+}
+function fresh(name){
+  return {designation:name, startDate:todayStr(), xp:0, savedAt:Date.now(),
+    domXP:{MIND:0,SOCIAL:0,BODY:0,STRATEGY:0,CORE:0},
+    log:{}, bonus:{}, mastered:[], metrics:{}, metricDay:{}};
+}
+function save(){
+  S.savedAt=Date.now();
+  try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
+  try{ IDB.set("state", JSON.stringify(S)); }catch(e){} // second in-browser layer
+}
+
+/* =====================================================
+   PERSISTENCE — automatic, in-browser, zero prompts
+   Two silent layers: localStorage (fast) + an IndexedDB
+   mirror (second copy). Open this same file in the same
+   browser and memory is continuous. Backups: RECORDS tab.
+   ===================================================== */
+const IDB={
+  open(){ return new Promise((res,rej)=>{ const r=indexedDB.open("whiteroom_fs",1);
+    r.onupgradeneeded=()=>r.result.createObjectStore("kv");
+    r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); }); },
+  async get(k){ const db=await this.open(); return new Promise((res,rej)=>{
+    const t=db.transaction("kv").objectStore("kv").get(k);
+    t.onsuccess=()=>res(t.result); t.onerror=()=>rej(t.error); }); },
+  async set(k,v){ const db=await this.open(); return new Promise((res,rej)=>{
+    const t=db.transaction("kv","readwrite").objectStore("kv").put(v,k);
+    t.onsuccess=()=>res(); t.onerror=()=>rej(t.error); }); },
+  async del(k){ const db=await this.open(); return new Promise((res,rej)=>{
+    const t=db.transaction("kv","readwrite").objectStore("kv").delete(k);
+    t.onsuccess=()=>res(); t.onerror=()=>rej(t.error); }); }
+};
+try{ if(navigator.storage&&navigator.storage.persist) navigator.storage.persist(); }catch(e){}
+function todayStr(d){ const t=d||new Date(); return t.getFullYear()+"-"+String(t.getMonth()+1).padStart(2,"0")+"-"+String(t.getDate()).padStart(2,"0"); }
+function dayNumber(){ return Math.floor((new Date(todayStr())-new Date(S.startDate))/86400000)+1; }
+function level(){ return Math.floor(Math.sqrt(S.xp/40))+1; }
+function xpFloor(l){ return 40*(l-1)*(l-1); }
+function rank(){ let r=RANKS[0]; for(const x of RANKS){ if(level()>=x.lv) r=x; } return r; }
+function nextRank(){ for(const x of RANKS){ if(level()<x.lv) return x; } return null; }
+function streak(){
+  let n=0; const d=new Date();
+  if(!(S.log[todayStr(d)]||[]).length) d.setDate(d.getDate()-1);
+  while((S.log[todayStr(d)]||[]).length){ n++; d.setDate(d.getDate()-1); }
+  return n;
+}
+function addXP(n,dom){ S.xp+=n; if(dom&&S.domXP[dom]!==undefined) S.domXP[dom]+=n; save(); }
+function toast(msg){ const t=document.getElementById("toast"); t.textContent=msg; t.style.display="block"; clearTimeout(t._h); t._h=setTimeout(()=>t.style.display="none",2600); }
+function esc(s){ return String(s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+
+/* =====================================================
+   ONBOARDING
+   ===================================================== */
+function enroll(){
+  const v=document.getElementById("gname").value.trim();
+  if(!v){ toast("STATE YOUR DESIGNATION"); return; }
+  S=fresh(v); save();
+  document.getElementById("gate").style.display="none";
+  renderAll(); toast("INDUCTION COMPLETE — DAY 1 BEGINS");
+}
+
+/* =====================================================
+   TABS
+   ===================================================== */
+document.querySelectorAll("nav button").forEach(b=>{
+  b.addEventListener("click",()=>{
+    document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));
+    document.querySelectorAll("section.tab").forEach(x=>x.classList.remove("show"));
+    b.classList.add("active");
+    document.getElementById("tab-"+b.dataset.tab).classList.add("show");
+    window.scrollTo(0,0);
+  });
+});
+
+/* =====================================================
+   RENDER — HEADER + DASHBOARD
+   ===================================================== */
+function renderHeader(){
+  document.getElementById("h-subject").textContent="SUBJECT: "+S.designation.toUpperCase();
+  document.getElementById("h-day").textContent="DAY "+dayNumber();
+  document.getElementById("h-date").textContent=new Date().toDateString().toUpperCase();
+}
+function renderDash(){
+  const lv=level(), r=rank(), nr=nextRank();
+  const cur=S.xp-xpFloor(lv), need=xpFloor(lv+1)-xpFloor(lv);
+  const today=S.log[todayStr()]||[];
+  const sched=SCHEDULE[new Date().getDay()];
+  const total=CORE.length+sched.drills.length;
+  // weekly compliance
+  let done7=0, poss7=0;
+  for(let i=0;i<7;i++){ const d=new Date(); d.setDate(d.getDate()-i);
+    const ds=todayStr(d); const sc=SCHEDULE[d.getDay()];
+    poss7+=CORE.length+sc.drills.length; done7+=(S.log[ds]||[]).length; }
+  const comp=poss7?Math.round(100*done7/poss7):0;
+  const dxp=S.domXP;
+  const maxD=Math.max(1,dxp.MIND,dxp.SOCIAL,dxp.BODY,dxp.STRATEGY);
+  const mastN=S.mastered.length;
+  document.getElementById("tab-dash").innerHTML=`
+  <div class="directive"><div class="kv">Directive — Day ${dayNumber()}</div>"${DIRECTIVES[(dayNumber()-1+DIRECTIVES.length*99)%DIRECTIVES.length]}"</div>
+  <div class="grid3">
+    <div class="panel"><div class="kv">Classification</div>
+      <div class="big rank-red">${r.name}</div>
+      <div class="xs mut">${r.note}</div><hr class="hr">
+      <div class="kv">Level ${lv} — ${S.xp} XP</div>
+      <div class="bar"><i class="red" style="width:${Math.min(100,Math.round(100*cur/need))}%"></i></div>
+      <div class="xs mut" style="margin-top:4px">${cur} / ${need} to level ${lv+1}${nr?" · "+nr.name+" at lv "+nr.lv:""}</div>
+    </div>
+    <div class="panel"><div class="kv">Continuity</div>
+      <div class="big">${streak()} <span class="sm mut">day streak</span></div>
+      <div class="xs mut">Day ${dayNumber()} of the program</div><hr class="hr">
+      <div class="kv">Today: ${today.length}/${total} blocks</div>
+      <div class="bar"><i style="width:${Math.round(100*today.length/total)}%"></i></div>
+      <div class="xs mut" style="margin-top:4px">7-day compliance: <b class="${comp>=80?'ok':(comp<50?'rank-red':'')}">${comp}%</b></div>
+    </div>
+    <div class="panel"><div class="kv">Curriculum</div>
+      <div class="big">${mastN}<span class="sm mut">/${NODES.length} nodes</span></div>
+      <div class="xs mut">mastered across 4 domains</div><hr class="hr">
+      ${DOMAINS.map(d=>{const m=NODES.filter(n=>n.domain===d&&S.mastered.includes(n.id)).length,t=NODES.filter(n=>n.domain===d).length;
+        return `<div class="xs" style="margin-top:4px">${d} <span class="mut">${m}/${t}</span><div class="bar" style="height:6px"><i style="width:${Math.round(100*m/t)}%"></i></div></div>`;}).join("")}
+    </div>
+  </div>
+  <div class="panel"><h2>Domain XP Distribution <span class="tag">where your minutes go</span></h2>
+    ${["MIND","SOCIAL","BODY","STRATEGY"].map(d=>`<div class="sm" style="margin-bottom:6px">${d} <span class="mut xs">${dxp[d]} XP</span>
+      <div class="bar" style="height:8px"><i style="width:${Math.round(100*dxp[d]/maxD)}%"></i></div></div>`).join("")}
+    <div class="xs mut" style="margin-top:8px">A lopsided chart is a lopsided operator. The schedule balances you; skipping days unbalances you.</div>
+  </div>
+  <div class="panel"><h2>Today's Focus <span class="tag">${sched.title}</span></h2>
+    <div class="sm">${sched.drills.map(id=>`<span class="dtag ${DRILLS[id].dom}">${DRILLS[id].dom}</span>${esc(DRILLS[id].name)}`).join(" &nbsp;·&nbsp; ")}</div>
+    <div class="xs mut" style="margin-top:8px">Plus the daily core: calibration, Kim's game, retrieval review, debrief. Go to TODAY'S PROTOCOL.</div>
+  </div>`;
+}
+
+/* =====================================================
+   RENDER — TODAY
+   ===================================================== */
+function renderToday(){
+  const ds=todayStr(), done=S.log[ds]||[], sched=SCHEDULE[new Date().getDay()];
+  const items=[...CORE,...sched.drills];
+  const totalMin=items.reduce((a,i)=>a+DRILLS[i].min,0);
+  const row=(id,i)=>{const d=DRILLS[id],dn=done.includes(id),open=openHow.has(id);
+    const steps=STEPS[id]||[], nl=NODELINK[id], nn=nl?NODES.find(x=>x.id===nl):null;
+    return `<div class="drill ${dn?"done":""}">
+      <input type="checkbox" ${dn?"checked":""} onchange="toggleDrill('${id}')">
+      <div style="flex:1"><div class="dn"><span class="dtag ${d.dom}">${d.dom}</span>${esc(d.name)} <span class="dm">· ${d.min} min · ${d.min} XP</span></div>
+      <div class="dd">${esc(d.desc)}</div>
+      <button class="howbtn" onclick="toggleHow('${id}')">${open?"▲ HIDE INSTRUCTIONS":"▼ HOW TO EXECUTE"}</button>
+      <div class="steps ${open?"show":""}">
+        <ol>${steps.map(s=>`<li>${esc(s)}</li>`).join("")}</ol>
+        ${nn?`<span class="nlink mut">Doctrine: </span><button class="howbtn" style="margin-top:0" onclick="goNode('${nl}')">${esc(nn.name)} — ${nn.domain} TIER ${nn.tier} →</button>`:""}
+      </div></div></div>`;};
+  document.getElementById("tab-today").innerHTML=`
+  <div class="panel"><h2>${sched.title} <span class="tag">~${totalMin} min · ${done.length}/${items.length} complete</span></h2>
+    <div class="kv" style="margin-bottom:8px">Daily Core — non-negotiable</div>
+    ${CORE.map(row).join("")}
+    <div class="kv" style="margin:14px 0 8px">Rotation — today's blocks</div>
+    ${sched.drills.map(row).join("")}
+    <div class="xs mut" style="margin-top:8px">Full completion bonus: +25 XP. ${S.bonus[ds]?"<b class='ok'>CLAIMED.</b>":"Unclaimed."}</div>
+  </div>
+  <div class="panel"><h2>Focus Timer <span class="tag">ultradian discipline</span></h2>
+    <div class="timer">
+      <div class="tdisp" id="tdisp">25:00</div>
+      <div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
+          ${[5,25,45,90].map(m=>`<button class="ghost" onclick="setTimer(${m})">${m}m</button>`).join("")}
+        </div>
+        <div style="display:flex;gap:6px">
+          <button class="act" id="tbtn" onclick="startPause()">START</button>
+          <button class="ghost" onclick="resetTimer()">RESET</button>
+        </div>
+      </div>
+      <div class="xs mut" style="max-width:340px">One objective, written down, phone in another room. Every urge to switch: tick a paper tally, return. The return is the rep.</div>
+    </div>
+  </div>`;
+}
+let openHow=new Set();
+function toggleHow(id){ openHow.has(id)?openHow.delete(id):openHow.add(id); renderToday(); }
+function goNode(id){
+  const n=NODES.find(x=>x.id===id); if(!n) return;
+  curDom=n.domain; openNode=tierUnlocked(n.domain,n.tier)?id:null; renderTree();
+  document.querySelector('nav button[data-tab="tree"]').click();
+  if(!openNode) toast("NODE STILL CLASSIFIED — MASTER THE PREVIOUS TIER");
+}
+function toggleDrill(id){
+  const ds=todayStr(); S.log[ds]=S.log[ds]||[];
+  const d=DRILLS[id], i=S.log[ds].indexOf(id);
+  if(i>=0){ S.log[ds].splice(i,1); addXP(-d.min, d.dom==="CORE"?"CORE":d.dom); }
+  else{
+    S.log[ds].push(id); addXP(d.min, d.dom==="CORE"?"CORE":d.dom);
+    const sched=SCHEDULE[new Date().getDay()], all=[...CORE,...sched.drills];
+    if(!S.bonus[ds] && all.every(x=>S.log[ds].includes(x))){
+      S.bonus[ds]=true; addXP(25,"CORE"); toast("FULL PROTOCOL COMPLETE — +25 XP");
+    } else toast("+"+d.min+" XP — "+d.name.toUpperCase());
+  }
+  save(); renderToday(); renderDash(); renderHeader();
+}
+
+/* ---------- timer ---------- */
+let T={total:1500,left:1500,run:false,h:null};
+function fmt(s){ return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0"); }
+function paintT(){ const el=document.getElementById("tdisp"); if(!el) return;
+  el.textContent=fmt(T.left); el.classList.toggle("run",T.run);
+  document.title=T.run?("["+fmt(T.left)+"] WHITE ROOM"):"WHITE ROOM — Cognitive Development Program";
+  const b=document.getElementById("tbtn"); if(b) b.textContent=T.run?"PAUSE":"START"; }
+function setTimer(m){ T.total=T.left=m*60; T.run=false; clearInterval(T.h); paintT(); }
+function startPause(){
+  if(T.run){ T.run=false; clearInterval(T.h); }
+  else{ T.run=true; T.h=setInterval(()=>{ T.left--;
+    if(T.left<=0){ T.left=0; T.run=false; clearInterval(T.h); beep(); toast("BLOCK COMPLETE — TAKE A REAL BREAK"); }
+    paintT(); },1000); }
+  paintT();
+}
+function resetTimer(){ T.left=T.total; T.run=false; clearInterval(T.h); paintT(); }
+function beep(){ try{ const c=new (window.AudioContext||window.webkitAudioContext)();
+  [0,.3,.6].forEach(t=>{ const o=c.createOscillator(),g=c.createGain();
+    o.connect(g); g.connect(c.destination); o.frequency.value=880; g.gain.value=.12;
+    o.start(c.currentTime+t); o.stop(c.currentTime+t+.18); }); }catch(e){} }
+
+/* =====================================================
+   RENDER — CURRICULUM TREE
+   ===================================================== */
+let curDom="MIND", openNode=null;
+function tierUnlocked(dom,tier){
+  if(tier===1) return true;
+  return NODES.filter(n=>n.domain===dom&&n.tier<tier).every(n=>S.mastered.includes(n.id));
+}
+function renderTree(){
+  const nodes=NODES.filter(n=>n.domain===curDom).sort((a,b)=>a.tier-b.tier);
+  document.getElementById("tab-tree").innerHTML=`
+  <div class="domtabs">${DOMAINS.map(d=>`<button class="${d===curDom?'act':'ghost'}" onclick="setDom('${d}')">${d}</button>`).join("")}</div>
+  <div class="panel"><h2>${curDom} TRACK <span class="tag">master a tier to unlock the next · +150 XP per node</span></h2>
+  ${nodes.map(n=>{
+    const m=S.mastered.includes(n.id), un=tierUnlocked(n.domain,n.tier), open=openNode===n.id&&un;
+    return `<div class="node ${m?'mastered':''} ${un?'':'locked'} ${open?'open':''}">
+      <div class="nh" onclick="${un?`toggleNode('${n.id}')`:''}">
+        <div><div class="nt">${un?esc(n.name):"█████ CLASSIFIED"}</div>
+        <div class="xs mut">${un?esc(n.brief):"Master the previous tier to declassify."}</div></div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span class="tier">TIER ${n.tier}</span>
+          <span class="status-pill ${m?'m':(un?'a':'l')}">${m?"MASTERED":(un?"ACTIVE":"LOCKED")}</span>
+        </div>
+      </div>
+      ${open?`<div class="nb">${n.guide}
+        <hr class="hr">${m?`<span class="ok xs">MASTERED — logged in your record.</span> <button class="ghost" onclick="unmaster('${n.id}')">REVOKE</button>`
+        :`<button class="act" onclick="master('${n.id}')">MARK MASTERED (+150 XP)</button> <span class="xs mut">Only when the mastery criteria are truly met. Lying here only sabotages the one person keeping score.</span>`}</div>`:""}
+    </div>`;}).join("")}
+  </div>`;
+}
+function setDom(d){ curDom=d; openNode=null; renderTree(); }
+function toggleNode(id){ openNode=(openNode===id?null:id); renderTree(); }
+function master(id){
+  if(S.mastered.includes(id)) return;
+  S.mastered.push(id); const n=NODES.find(x=>x.id===id);
+  addXP(150,n.domain); save(); renderTree(); renderDash(); renderHeader();
+  toast(n.name.toUpperCase()+" — MASTERED. +150 XP");
+}
+function unmaster(id){
+  const i=S.mastered.indexOf(id); if(i<0) return;
+  S.mastered.splice(i,1); const n=NODES.find(x=>x.id===id);
+  addXP(-150,n.domain); save(); renderTree(); renderDash(); renderHeader();
+}
+
+/* =====================================================
+   RENDER — EVALUATIONS
+   ===================================================== */
+function spark(vals,dir){
+  if(vals.length<2) return `<div class="xs mut">Record at least 2 entries to plot the trend.</div>`;
+  const w=300,h=44,min=Math.min(...vals),max=Math.max(...vals),rg=(max-min)||1;
+  const pts=vals.map((v,i)=>`${(i/(vals.length-1))*w},${h-4-((v-min)/rg)*(h-8)}`).join(" ");
+  const better=dir>0?vals[vals.length-1]>=vals[0]:vals[vals.length-1]<=vals[0];
+  return `<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
+    <polyline points="${pts}" fill="none" stroke="${better?"#1a6b3c":"#b5121b"}" stroke-width="2"/></svg>`;
+}
+function renderEval(){
+  const st=fcStats();
+  const pending=S.forecasts.map((f,i)=>({f,i})).filter(x=>x.f.res===null);
+  document.getElementById("tab-eval").innerHTML=`
+  <div class="panel"><h2>Forecast Ledger <span class="tag">calibration, measured in-app</span></h2>
+    <div class="xs mut" style="margin-bottom:10px">Log predictions with a confidence level; score them when reality answers. Your hit rate should match your stated confidence — that gap is what you're training. Morning calibration forecasts go here.</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+      <input type="text" id="fc-txt" placeholder="Prediction, e.g. 'I complete the full protocol today'" style="flex:1;min-width:220px">
+      <select id="fc-p" style="width:90px">${[55,60,65,70,75,80,85,90,95,99].map(p=>`<option ${p===80?"selected":""}>${p}</option>`).join("")}</select>
+      <button class="act" onclick="addForecast()">LOG %</button>
+    </div>
+    ${pending.length?`<div class="kv" style="margin-bottom:6px">Awaiting verdict</div>`+pending.map(({f,i})=>
+      `<div class="fcrow"><span class="mut xs">${f.d}</span><span class="fx">${esc(f.txt)}</span><b>${f.p}%</b>
+       <button class="ghost" onclick="scoreForecast(${i},true)">✓ TRUE</button>
+       <button class="ghost" onclick="scoreForecast(${i},false)">✗ FALSE</button>
+       <button class="ghost" onclick="delForecast(${i})">DEL</button></div>`).join("")
+    :`<div class="xs mut">No open forecasts.</div>`}
+    <hr class="hr">
+    ${st?`<div class="sm">Resolved: <b>${st.n}</b> · Hit rate: <b>${st.rate}%</b> at average stated confidence <b>${st.avgP}%</b> — gap: <b class="${Math.abs(st.rate-st.avgP)<=10?'ok':'rank-red'}">${st.rate-st.avgP>0?"+":""}${st.rate-st.avgP}</b>
+      <button class="act" style="margin-left:8px" onclick="recordValue('calib',${st.rate})">RECORD ${st.rate}% TO CALIBRATION METRIC</button></div>`
+    :`<div class="xs mut">Resolve forecasts to compute your calibration.</div>`}
+  </div>
+  <div class="panel"><h2>Weekly Assessment Battery <span class="tag">+15 XP per metric recorded · test day: Sunday</span></h2>
+  <div class="xs mut" style="margin-bottom:12px">The White Room does not grade effort. It graphs numbers. Metrics marked <b>RUN TEST</b> are administered, timed, and scored by the program itself — no honor system. The rest are physical or external; test them as instructed and enter the result. Trend lines: <b class="ok">green = improving</b>, <b class="rank-red">red = regressing</b>.</div>
+  ${METRICS.map(m=>{
+    const hist=S.metrics[m.id]||[], last=hist[hist.length-1];
+    return `<div class="metric">
+      <div class="mrow">
+        <div style="flex:1;min-width:220px">
+          <div class="mn"><span class="dtag ${m.dom}">${m.dom}</span>${esc(m.name)} <span class="xs mut">(${m.unit}, ${m.dir>0?"higher":"lower"} is better)</span></div>
+          <div class="mi">${esc(m.how)}</div>
+        </div>
+        <div class="right">
+          <div class="mval">${last?last.v:"—"}</div>
+          <div class="xs mut">${last?last.d:"never tested"}</div>
+        </div>
+      </div>
+      <div class="rec">
+        ${TESTABLE[m.id]?`<button class="act" onclick="runTest('${m.id}')">▶ RUN TEST</button>`:""}
+        ${m.id==="calib"?`<span class="xs mut" style="align-self:center">← use the ledger above, or enter manually:</span>`:""}
+        <input type="number" step="any" id="in-${m.id}" placeholder="${m.unit}">
+        <button class="ghost" onclick="recMetric('${m.id}')">RECORD</button>
+      </div>
+      ${spark(hist.map(x=>x.v),m.dir)}
+    </div>`;}).join("")}
+  </div>`;
+}
+function recordValue(id,v){
+  const ds=todayStr();
+  S.metrics[id]=S.metrics[id]||[];
+  S.metrics[id].push({d:ds,v:v});
+  const k=id+"|"+ds;
+  if(!S.metricDay[k]){ S.metricDay[k]=1; addXP(15,METRICS.find(m=>m.id===id).dom); toast("RECORDED "+v+" — +15 XP"); }
+  else toast("RECORDED "+v);
+  save(); renderEval(); renderDash(); renderHeader();
+}
+function recMetric(id){
+  const el=document.getElementById("in-"+id), v=parseFloat(el.value);
+  if(isNaN(v)){ toast("ENTER A NUMBER"); return; }
+  recordValue(id,v);
+}
+
+/* =====================================================
+   IN-APP TEST ENGINES
+   Metrics with an engine are tested inside the program:
+   generation, timing, and scoring are automatic.
+   ===================================================== */
+const TESTABLE={digit:1,words:1,mathT:1,nback:1,kimS:1,plank:1,cold:1,rhr:1};
+function runTest(id){
+  ({digit:dsStart, words:wtStart, mathT:mtStart, nback:nbStart, kimS:kimStart,
+    plank:()=>swStart("plank"), cold:()=>swStart("cold"), rhr:tapStart}[id])();
+}
+const TM={
+  h:null,t:null,
+  open(title){ document.getElementById("tm-title").textContent=title; document.getElementById("tmodal").style.display="flex"; },
+  body(h){ document.getElementById("tm-body").innerHTML=h; },
+  close(){ document.getElementById("tmodal").style.display="none";
+    clearInterval(TM.h); clearTimeout(TM.t); window.onkeydown=null;
+    try{ speechSynthesis.cancel(); }catch(e){} }
+};
+function tmDone(id,val,label){
+  TM.body(`<div class="tm-ctr"><div class="tm-mid">${label}</div>
+    <div style="margin-top:16px"><button class="act" onclick="recordValue('${id}',${val});TM.close()">RECORD ${val}</button>
+    <button class="ghost" onclick="TM.close()">DISCARD</button></div></div>`);
+}
+
+/* ---------- 1. Digit Span (backward) ---------- */
+let DS={};
+function dsStart(){
+  DS={len:3,fails:0,best:0,seq:[]};
+  TM.open("DIGIT SPAN — BACKWARD");
+  TM.body(`<div class="tm-ctr"><p class="sm">Digits appear one at a time. When the sequence ends, type it <b>BACKWARD</b>.<br>Start: 3 digits. Two failures at a length ends the test.</p>
+    <div style="margin-top:14px"><button class="act" onclick="dsRound()">BEGIN</button></div></div>`);
+}
+function dsRound(){
+  DS.seq=Array.from({length:DS.len},()=>Math.floor(Math.random()*10));
+  dsShow(0);
+}
+function dsShow(i){
+  if(i<DS.seq.length){
+    TM.body(`<div class="tm-big">${DS.seq[i]}</div><div class="tm-stat">length ${DS.len} — digit ${i+1}/${DS.len}</div>`);
+    TM.t=setTimeout(()=>{ TM.body(`<div class="tm-big">&nbsp;</div><div class="tm-stat">…</div>`);
+      TM.t=setTimeout(()=>dsShow(i+1),220); },780);
+  } else {
+    TM.body(`<div class="tm-ctr"><p class="sm">Type the sequence <b>BACKWARD</b>:</p>
+      <input type="text" id="ds-in" inputmode="numeric" style="max-width:240px;margin:12px auto;text-align:center;font-size:22px;letter-spacing:6px" autocomplete="off">
+      <div><button class="act" onclick="dsCheck()">SUBMIT</button></div>
+      <div class="tm-stat">length ${DS.len} · best passed: ${DS.best||"—"}</div></div>`);
+    const el=document.getElementById("ds-in"); el.focus();
+    window.onkeydown=e=>{ if(e.key==="Enter") dsCheck(); };
+  }
+}
+function dsCheck(){
+  window.onkeydown=null;
+  const v=(document.getElementById("ds-in").value||"").replace(/\D/g,"");
+  const want=[...DS.seq].reverse().join("");
+  if(v===want){
+    DS.best=DS.len; DS.fails=0; DS.len++;
+    TM.body(`<div class="tm-ctr"><div class="tm-mid ok">CORRECT</div><div class="tm-stat">advancing to length ${DS.len}</div>
+      <div style="margin-top:12px"><button class="act" onclick="dsRound()">CONTINUE</button></div></div>`);
+  } else {
+    DS.fails++;
+    if(DS.fails>=2){ tmDone("digit",DS.best,DS.best?`SPAN: ${DS.best} DIGITS BACKWARD`:"NO LENGTH PASSED — RECORD 0? RETRY LATER."); }
+    else TM.body(`<div class="tm-ctr"><div class="tm-mid rank-red">MISS</div><div class="tm-stat">answer was ${want} · one more attempt at length ${DS.len}</div>
+      <div style="margin-top:12px"><button class="act" onclick="dsRound()">RETRY LENGTH ${DS.len}</button></div></div>`);
+  }
+}
+
+/* ---------- 2. 20-Word List ---------- */
+const WORDBANK=("anchor bridge candle dagger engine falcon garden hammer island jacket kettle ladder mirror needle orchid pistol quarry rocket saddle temple umbrella violin wallet zebra barrel canyon dolphin ember forest glacier harbor iron jungle knight lantern marble nectar onion palace quill river shield tunnel vulture whale yacht arrow basket cellar drum eagle fountain guitar helmet ivory jewel kayak lemon magnet nail oven piano rope sword tiger urn vault wagon axe bell coin desk envelope flag gate hook ink jar key lamp map net oar pearl ring stone tent vase wing bone cloud dust fern grain hedge iris kelp moss node opal pine reef silk thorn vine wolf yarn").split(" ");
+let WT={};
+function wtStart(){
+  const pool=[...WORDBANK]; WT={words:[],t0:0,phase:0};
+  for(let i=0;i<20;i++) WT.words.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
+  TM.open("20-WORD LIST — TIMED");
+  TM.body(`<div class="tm-ctr"><p class="sm">20 words appear with a running clock. Memorize <b>in order</b> (use your palace).<br>When ready, begin recall — type them in order. Clock runs until recall is perfect.</p>
+    <div style="margin-top:14px"><button class="act" onclick="wtStudy()">START CLOCK</button></div></div>`);
+}
+function wtStudy(){
+  if(!WT.t0) WT.t0=Date.now();
+  TM.body(`<div class="tm-stat">ELAPSED: <span id="wt-el">0:00</span></div>
+    <div class="wordcols">${WT.words.map((w,i)=>`${i+1}. ${w}`).join("<br>")}</div>
+    <div class="tm-ctr"><button class="act" onclick="wtRecall()">BEGIN RECALL</button></div>`);
+  clearInterval(TM.h);
+  TM.h=setInterval(()=>{ const s=Math.floor((Date.now()-WT.t0)/1000), el=document.getElementById("wt-el");
+    if(el) el.textContent=Math.floor(s/60)+":"+String(s%60).padStart(2,"0"); },500);
+}
+function wtRecall(){
+  TM.body(`<div class="tm-stat">ELAPSED: <span id="wt-el">…</span> — clock still running</div>
+    <p class="sm tm-ctr">Type all 20 words in order, one per line:</p>
+    <textarea id="wt-in" style="min-height:200px"></textarea>
+    <div class="tm-ctr" style="margin-top:10px"><button class="act" onclick="wtCheck()">SUBMIT RECALL</button></div>`);
+  document.getElementById("wt-in").focus();
+}
+function wtCheck(){
+  const lines=document.getElementById("wt-in").value.trim().toLowerCase().split(/\n+/).map(x=>x.trim().replace(/^\d+[.)]?\s*/,""));
+  const errs=[];
+  for(let i=0;i<20;i++) if((lines[i]||"")!==WT.words[i]) errs.push(i+1);
+  if(!errs.length){
+    clearInterval(TM.h);
+    const min=Math.round((Date.now()-WT.t0)/6000)/10;
+    tmDone("words",min,`PERFECT RECALL — ${min} MIN`);
+  } else {
+    TM.body(`<div class="tm-ctr"><div class="tm-mid rank-red">${errs.length} ERROR${errs.length>1?"S":""}</div>
+      <div class="tm-stat">wrong or missing at position${errs.length>1?"s":""}: ${errs.join(", ")} · clock still running</div>
+      <div style="margin-top:12px"><button class="act" onclick="wtStudy()">RETURN TO STUDY</button>
+      <button class="ghost" onclick="wtRecall()">RECALL AGAIN</button></div></div>`);
+  }
+}
+
+/* ---------- 3. 20 Multiplications ---------- */
+let MT={};
+function mtStart(){
+  MT={ps:[],i:0,ok:0,t0:0};
+  for(let i=0;i<20;i++) MT.ps.push({a:12+Math.floor(Math.random()*87),b:12+Math.floor(Math.random()*87)});
+  TM.open("20 MULTIPLICATIONS — TIMED");
+  TM.body(`<div class="tm-ctr"><p class="sm">Twenty 2-digit × 2-digit problems. Mental calculation only.<br>Timer stops at the last answer. Standard: &lt;4 min at ≥90% accuracy.</p>
+    <div style="margin-top:14px"><button class="act" onclick="MT.t0=Date.now();mtQ()">BEGIN</button></div></div>`);
+}
+function mtQ(){
+  const p=MT.ps[MT.i];
+  TM.body(`<div class="tm-big" style="font-size:52px">${p.a} × ${p.b}</div>
+    <div class="tm-ctr"><input type="number" id="mt-in" style="max-width:200px;text-align:center;font-size:22px" autocomplete="off">
+    <div style="margin-top:10px"><button class="act" onclick="mtA()">NEXT</button></div></div>
+    <div class="tm-stat">problem ${MT.i+1}/20</div>`);
+  const el=document.getElementById("mt-in"); el.focus();
+  window.onkeydown=e=>{ if(e.key==="Enter") mtA(); };
+}
+function mtA(){
+  window.onkeydown=null;
+  const p=MT.ps[MT.i], v=parseInt(document.getElementById("mt-in").value,10);
+  if(v===p.a*p.b) MT.ok++;
+  MT.i++;
+  if(MT.i<20) mtQ();
+  else{
+    const min=Math.round((Date.now()-MT.t0)/6000)/10, acc=Math.round(100*MT.ok/20);
+    if(acc>=90) tmDone("mathT",min,`${min} MIN — ACCURACY ${acc}%`);
+    else TM.body(`<div class="tm-ctr"><div class="tm-mid rank-red">INVALID — ${acc}% ACCURACY</div>
+      <div class="tm-stat">below the 90% floor · time was ${min} min · train, then retest</div>
+      <div style="margin-top:12px"><button class="act" onclick="mtStart()">RETEST</button>
+      <button class="ghost" onclick="TM.close()">CLOSE</button></div></div>`);
+  }
+}
+
+/* ---------- 4. Dual N-Back ---------- */
+const NBL=["C","H","K","L","Q","R","S","T"];
+let NB={};
+function nbStart(){
+  const hist=S.metrics.nback||[], last=hist.length?Math.max(2,Math.round(hist[hist.length-1].v)):2;
+  NB={n:last,best:0,block:0};
+  TM.open("DUAL N-BACK");
+  TM.body(`<div class="tm-ctr"><p class="sm">A square lights up and a letter sounds, every 2.5s.<br>
+    Press <b>A</b> (or the button) if the POSITION matches the one N steps back.<br>
+    Press <b>L</b> if the LETTER matches N steps back. Both can match.</p>
+    <p class="xs mut">≥80% accuracy passes a block and raises N; &lt;65% lowers it. 3 blocks per session.</p>
+    <div style="margin-top:12px">N = <select id="nb-n">${[1,2,3,4,5,6].map(x=>`<option ${x===last?"selected":""}>${x}</option>`).join("")}</select></div>
+    <div style="margin-top:12px"><button class="act" onclick="nbBlock()">START BLOCK 1</button></div></div>`);
+}
+function nbGen(n,len){
+  const seq=[];
+  for(let i=0;i<len;i++){
+    let p=Math.floor(Math.random()*9), l=Math.floor(Math.random()*8);
+    if(i>=n){ if(Math.random()<.3) p=seq[i-n].p; if(Math.random()<.3) l=seq[i-n].l; }
+    seq.push({p,l});
+  }
+  return seq;
+}
+function nbBlock(){
+  NB.n=parseInt((document.getElementById("nb-n")||{value:NB.n}).value,10)||NB.n;
+  NB.block++; NB.len=20+NB.n; NB.seq=nbGen(NB.n,NB.len); NB.i=-1;
+  NB.sc={ph:0,pf:0,pm:0,lh:0,lf:0,lm:0}; NB.pp=false; NB.pl=false;
+  TM.body(`<div class="tm-stat">BLOCK ${NB.block}/3 · N = ${NB.n} · trial <span id="nb-tr">0</span>/${NB.len}</div>
+    <div class="nbgrid">${Array.from({length:9},(_,i)=>`<div class="nbcell" id="nbc${i}"></div>`).join("")}</div>
+    <div class="tm-big" id="nb-let" style="font-size:40px;min-height:56px">&nbsp;</div>
+    <div class="nbkeys">
+      <button class="ghost" id="nb-pb" onclick="nbPress('p')">[A] POSITION MATCH</button>
+      <button class="ghost" id="nb-lb" onclick="nbPress('l')">[L] LETTER MATCH</button>
+    </div>`);
+  window.onkeydown=e=>{ const k=e.key.toLowerCase();
+    if(k==="a") nbPress("p"); if(k==="l") nbPress("l"); };
+  clearInterval(TM.h);
+  nbTick();
+  TM.h=setInterval(nbTick,2500);
+}
+function nbPress(w){
+  if(NB.i<0||NB.i>=NB.len) return;
+  if(w==="p"&&!NB.pp){ NB.pp=true; const b=document.getElementById("nb-pb"); if(b)b.classList.add("hit"); }
+  if(w==="l"&&!NB.pl){ NB.pl=true; const b=document.getElementById("nb-lb"); if(b)b.classList.add("hit"); }
+}
+function nbScore(){
+  if(NB.i>=NB.n){
+    const t=NB.seq[NB.i], pm=t.p===NB.seq[NB.i-NB.n].p, lm=t.l===NB.seq[NB.i-NB.n].l;
+    if(pm&&NB.pp)NB.sc.ph++; if(pm&&!NB.pp)NB.sc.pm++; if(!pm&&NB.pp)NB.sc.pf++;
+    if(lm&&NB.pl)NB.sc.lh++; if(lm&&!NB.pl)NB.sc.lm++; if(!lm&&NB.pl)NB.sc.lf++;
+  }
+}
+function nbTick(){
+  if(NB.i>=0) nbScore();
+  NB.i++;
+  document.querySelectorAll(".nbcell").forEach(c=>c.classList.remove("on"));
+  ["nb-pb","nb-lb"].forEach(id=>{const b=document.getElementById(id); if(b)b.classList.remove("hit");});
+  NB.pp=false; NB.pl=false;
+  if(NB.i>=NB.len){ clearInterval(TM.h); window.onkeydown=null; nbEnd(); return; }
+  const t=NB.seq[NB.i];
+  const tr=document.getElementById("nb-tr"); if(tr) tr.textContent=NB.i+1;
+  const c=document.getElementById("nbc"+t.p); if(c) c.classList.add("on");
+  const letter=NBL[t.l];
+  const le=document.getElementById("nb-let"); if(le) le.textContent=letter;
+  try{ const u=new SpeechSynthesisUtterance(letter); u.rate=1.3; speechSynthesis.speak(u); }catch(e){}
+  TM.t=setTimeout(()=>{ const c2=document.getElementById("nbc"+t.p); if(c2) c2.classList.remove("on"); },700);
+}
+function nbEnd(){
+  const sc=NB.sc, scored=NB.len-NB.n;
+  const acc=Math.round(100*((sc.ph+sc.lh)+(2*scored-(sc.ph+sc.pm)-(sc.lh+sc.lm)-sc.pf-sc.lf))/(2*scored));
+  let msg, next=NB.n;
+  if(acc>=80){ NB.best=Math.max(NB.best,NB.n); next=NB.n+1; msg=`<span class="ok">PASSED</span> — N advances to ${next}`; }
+  else if(acc<65 && NB.n>1){ next=NB.n-1; msg=`<span class="rank-red">BELOW 65%</span> — N drops to ${next}`; }
+  else msg=`HOLD — N stays at ${NB.n}`;
+  NB.n=next;
+  const final=NB.block>=3;
+  const result=NB.best||Math.max(1,NB.n-1);
+  TM.body(`<div class="tm-ctr"><div class="tm-mid">BLOCK ${NB.block}: ${acc}%</div>
+    <div class="tm-stat">position hits ${sc.ph} · misses ${sc.pm} · false ${sc.pf} &nbsp;|&nbsp; letter hits ${sc.lh} · misses ${sc.lm} · false ${sc.lf}</div>
+    <p class="sm" style="margin-top:8px">${msg}</p>
+    <div style="margin-top:12px">
+      ${final?`<button class="act" onclick="recordValue('nback',${result});TM.close()">RECORD LEVEL ${result}</button>`
+      :`<button class="act" onclick="nbBlock()">BLOCK ${NB.block+1}/3 (N=${NB.n})</button>`}
+      <button class="ghost" onclick="${NB.best?`recordValue('nback',${NB.best});TM.close()`:"TM.close()"}">${NB.best?`STOP & RECORD ${NB.best}`:"STOP"}</button>
+    </div></div>`);
+}
+
+/* ---------- 5. Kim's Game ---------- */
+const KIM_ITEMS=[["🔑","key"],["⌚","watch"],["🔋","battery"],["✂️","scissors"],["🔦","flashlight"],["🧭","compass"],["📎","paperclip"],["🖊️","pen"],["🕶️","sunglasses"],["🧤","glove"],["🔒","padlock"],["📱","phone"],["🔩","bolt"],["🪙","coin"],["🗺️","map"],["🎧","headphones"],["🔨","hammer"],["🪫","dead battery"],["📷","camera"],["🕯️","candle"],["🧲","magnet"],["💊","pill"],["🖇️","clips"],["📌","pin"],["🧵","thread"],["🪞","mirror"],["🥄","spoon"],["🍴","fork"],["🔪","knife"],["🧢","cap"],["👞","shoe"],["🧦","sock"],["💳","card"],["📖","book"],["✉️","envelope"],["🖍️","crayon"],["📏","ruler"],["🧽","sponge"],["🪥","toothbrush"],["🧴","bottle"],["🎲","die"],["♟️","chess piece"],["🪀","yo-yo"],["🧩","puzzle piece"],["🎈","balloon"],["🔔","bell"],["🪶","feather"],["🌂","umbrella"]].filter(x=>x[1]!=="x");
+let KG={};
+function kimStart(){
+  const pool=[...KIM_ITEMS]; KG={targets:[],dist:[],sel:new Set(),tleft:60};
+  for(let i=0;i<20;i++) KG.targets.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
+  for(let i=0;i<20;i++) KG.dist.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
+  TM.open("KIM'S GAME — OBSERVATION");
+  TM.body(`<div class="tm-ctr"><p class="sm">20 objects, 60 seconds of study. Then they vanish and you must pick exactly those 20 out of 40.<br>Score = correct picks − false picks. Standard: 18/20.</p>
+    <p class="xs mut">Harder variant (closer to sniper school): after study, wait 30+ minutes before pressing TEST.</p>
+    <div style="margin-top:12px"><button class="act" onclick="kimStudy()">SHOW OBJECTS</button></div></div>`);
+}
+function kimStudy(){
+  TM.body(`<div class="tm-stat">STUDY — <span id="kg-t">60</span>s (or advance early / wait longer for the delayed variant)</div>
+    <div class="kimgrid">${KG.targets.map(t=>`<div class="kimit">${t[0]} ${t[1]}</div>`).join("")}</div>
+    <div class="tm-ctr"><button class="act" onclick="kimTest()">BEGIN TEST</button></div>`);
+  clearInterval(TM.h);
+  TM.h=setInterval(()=>{ KG.tleft--; const el=document.getElementById("kg-t");
+    if(el) el.textContent=Math.max(0,KG.tleft);
+    if(KG.tleft<=0){ clearInterval(TM.h); kimTest(); } },1000);
+}
+function kimTest(){
+  clearInterval(TM.h);
+  const all=[...KG.targets,...KG.dist].map(t=>t.join("|"));
+  for(let i=all.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [all[i],all[j]]=[all[j],all[i]]; }
+  KG.order=all; KG.sel=new Set();
+  TM.body(`<div class="tm-ctr"><p class="sm">Select the 20 objects you studied (<span id="kg-n">0</span>/20 selected):</p></div>
+    <div class="kimgrid">${all.map((t,i)=>{const[e,n]=t.split("|");return `<div class="kimit pick" id="kg${i}" onclick="kimPick(${i})">${e} ${n}</div>`;}).join("")}</div>
+    <div class="tm-ctr"><button class="act" onclick="kimScore()">SUBMIT</button></div>`);
+}
+function kimPick(i){
+  if(KG.sel.has(i)) KG.sel.delete(i); else if(KG.sel.size<20) KG.sel.add(i);
+  const el=document.getElementById("kg"+i); if(el) el.classList.toggle("sel",KG.sel.has(i));
+  const n=document.getElementById("kg-n"); if(n) n.textContent=KG.sel.size;
+}
+function kimScore(){
+  const targets=new Set(KG.targets.map(t=>t.join("|")));
+  let hits=0,falses=0;
+  KG.sel.forEach(i=>{ if(targets.has(KG.order[i])) hits++; else falses++; });
+  const score=Math.max(0,hits-falses);
+  tmDone("kimS",score,`SCORE: ${score}/20 &nbsp;<span class="tm-stat">(${hits} correct, ${falses} false)</span>`);
+}
+
+/* ---------- 6. Stopwatch (plank / cold) ---------- */
+let SW={};
+function swStart(metric){
+  SW={m:metric,t0:0,run:false,el:0};
+  TM.open(metric==="plank"?"PLANK HOLD — STOPWATCH":"COLD EXPOSURE — STOPWATCH");
+  TM.body(`<div class="tm-ctr"><div class="tm-big" id="sw-d">0.0s</div>
+    <div><button class="act" id="sw-b" onclick="swToggle()">START</button>
+    <button class="ghost" onclick="swRec()">STOP & RECORD</button></div>
+    <p class="xs mut" style="margin-top:10px">${SW.m==="plank"?"Straight line, controlled breathing. Stop at form break, not at collapse.":"Slow exhales, neutral face. Control is the metric."}</p></div>`);
+}
+function swToggle(){
+  if(SW.run){ SW.run=false; clearInterval(TM.h); document.getElementById("sw-b").textContent="RESUME"; }
+  else{ SW.run=true; SW.t0=Date.now()-SW.el*1000; document.getElementById("sw-b").textContent="PAUSE";
+    clearInterval(TM.h);
+    TM.h=setInterval(()=>{ SW.el=(Date.now()-SW.t0)/1000;
+      const d=document.getElementById("sw-d"); if(d) d.textContent=SW.el.toFixed(1)+"s"; },100); }
+}
+function swRec(){
+  clearInterval(TM.h); SW.run=false;
+  const sec=Math.round(SW.el);
+  if(sec<1){ toast("NOTHING TO RECORD"); return; }
+  tmDone(SW.m,sec,`${sec} SECONDS`);
+}
+
+/* ---------- 7. Resting HR — pulse tap ---------- */
+let TH={};
+function tapStart(){
+  TH={taps:[]};
+  TM.open("RESTING HEART RATE — PULSE TAP");
+  TM.body(`<div class="tm-ctr"><p class="sm">Find your pulse (wrist or neck). Tap the button — or press SPACE — on every beat.<br>BPM computes live after 5 taps; 15–20 taps gives a stable reading.</p>
+    <div class="tm-big" id="th-d">—</div>
+    <div><button class="act" onclick="tapBeat()" style="min-width:200px;padding:16px">TAP ON BEAT</button></div>
+    <div class="tm-stat"><span id="th-n">0</span> taps</div>
+    <div style="margin-top:10px"><button class="ghost" onclick="tapRec()">DONE — RECORD</button>
+    <button class="ghost" onclick="TH.taps=[];document.getElementById('th-d').textContent='—';document.getElementById('th-n').textContent='0'">RESET</button></div>
+    <p class="xs mut" style="margin-top:8px">Measure seated, rested — ideally on waking. Movement or caffeine inflates it.</p></div>`);
+  window.onkeydown=e=>{ if(e.code==="Space"){ e.preventDefault(); tapBeat(); } };
+}
+function tapBeat(){
+  TH.taps.push(Date.now());
+  if(TH.taps.length>21) TH.taps.shift();
+  const n=document.getElementById("th-n"); if(n) n.textContent=TH.taps.length;
+  if(TH.taps.length>=5){
+    const iv=[]; for(let i=1;i<TH.taps.length;i++) iv.push(TH.taps[i]-TH.taps[i-1]);
+    const avg=iv.reduce((a,b)=>a+b,0)/iv.length;
+    TH.bpm=Math.round(60000/avg);
+    const d=document.getElementById("th-d"); if(d) d.textContent=TH.bpm+" bpm";
+  }
+}
+function tapRec(){
+  window.onkeydown=null;
+  if(!TH.bpm){ toast("TAP AT LEAST 5 BEATS"); return; }
+  tmDone("rhr",TH.bpm,TH.bpm+" BPM");
+}
+
+/* =====================================================
+   FORECAST LEDGER (calibration, in-app)
+   ===================================================== */
+function addForecast(){
+  const t=document.getElementById("fc-txt").value.trim(), p=parseInt(document.getElementById("fc-p").value,10);
+  if(!t){ toast("STATE THE FORECAST"); return; }
+  S.forecasts.push({d:todayStr(),txt:t,p:p,res:null});
+  save(); renderEval(); toast("FORECAST LOGGED");
+}
+function scoreForecast(i,res){ S.forecasts[i].res=res; save(); renderEval(); }
+function delForecast(i){ S.forecasts.splice(i,1); save(); renderEval(); }
+function fcStats(){
+  const done=S.forecasts.filter(f=>f.res!==null);
+  if(!done.length) return null;
+  const hits=done.filter(f=>f.res).length;
+  const avgP=Math.round(done.reduce((a,f)=>a+f.p,0)/done.length);
+  return {n:done.length, rate:Math.round(100*hits/done.length), avgP};
+}
+/* =====================================================
+   WORKSHEETS — analyst tradecraft, done in-app
+   ===================================================== */
+const WS_TPL={
+ kac:{name:"Key Assumptions Check",dom:"STRATEGY",tip:"Run before committing to any plan. Most plans die here — cheaply.",fields:[
+   {k:"q",t:"text",label:"Decision / plan under examination",ph:"e.g. Accept the internship offer"},
+   {k:"a",t:"area",label:"Assumptions it rests on — one per line: assumption | evidence | consequence if wrong",ph:"They'll convert me to full-time | recruiter said 'usually' | wasted 6 months"},
+   {k:"v",t:"area",label:"Verdict: which assumptions are load-bearing AND shaky? What gets verified before proceeding?"}]},
+ ach:{name:"Competing Hypotheses (ACH)",dom:"STRATEGY",tip:"For 'what is really going on?' questions. Work to refute, not confirm.",fields:[
+   {k:"q",t:"text",label:"Question",ph:"e.g. Why did X suddenly change their position?"},
+   {k:"h",t:"area",label:"ALL plausible hypotheses — one per line, including the uncomfortable ones"},
+   {k:"e",t:"area",label:"Evidence — one per line: evidence | which hypotheses it CONTRADICTS"},
+   {k:"c",t:"area",label:"Conclusion: least-contradicted hypothesis, your confidence %, and what evidence would change your mind"}]},
+ pre:{name:"Premortem",dom:"STRATEGY",tip:"It is one year later and the plan failed. Write the autopsy before the surgery.",fields:[
+   {k:"q",t:"text",label:"Decision / project"},
+   {k:"f",t:"area",label:"It failed. The causes, one per line, most likely first"},
+   {k:"m",t:"area",label:"Countermeasure for each cause you can influence — or the tripwire that tells you it's happening"}]},
+ neg:{name:"Negotiation Prep Sheet",dom:"STRATEGY",tip:"Outcomes are decided before anyone speaks. Complete every field before the conversation.",fields:[
+   {k:"q",t:"text",label:"Negotiation"},
+   {k:"b",t:"area",label:"My BATNA (best alternative if this collapses) + one action that improves it"},
+   {k:"w",t:"text",label:"My walk-away point"},{k:"tw",t:"text",label:"Their estimated walk-away (basis for the estimate?)"},
+   {k:"an",t:"text",label:"My anchor — extreme but justifiable"},
+   {k:"tr",t:"area",label:"Trades: cheap for me / valuable to them — and the reverse"},
+   {k:"aa",t:"area",label:"Accusation audit: every negative they may think of me, defused up front"}]},
+ game:{name:"Game Structure Analysis",dom:"STRATEGY",tip:"Which game is actually being played?",fields:[
+   {k:"q",t:"text",label:"Situation"},
+   {k:"p",t:"area",label:"Players and what each actually wants (incentives, not stated goals) — one per line"},
+   {k:"s",t:"area",label:"Structure: one-shot or repeated? zero-sum or positive-sum? who knows what?"},
+   {k:"pr",t:"area",label:"Prediction of play + my best move given the structure"}]},
+ fermi:{name:"Fermi Estimate",dom:"MIND",tip:"Decompose the unknowable into estimable parts. Score yourself against truth.",fields:[
+   {k:"q",t:"text",label:"Question",ph:"e.g. How many piano tuners work in this city?"},
+   {k:"d",t:"area",label:"Decomposition — factors and your estimate for each, one per line"},
+   {k:"r",t:"text",label:"Final range (low – high)"},
+   {k:"a",t:"text",label:"Actual (after checking) — did the range capture it?"}]},
+ feyn:{name:"Feynman Extraction",dom:"MIND",tip:"If you can't explain it simply, you don't own it yet.",fields:[
+   {k:"q",t:"text",label:"Concept"},
+   {k:"x",t:"area",label:"Explanation for a sharp 12-year-old — no jargon"},
+   {k:"g",t:"area",label:"Gaps found (where you stalled or reached for jargon) and the patch for each"},
+   {k:"s",t:"text",label:"The whole thing in one sentence (card this into Anki)"}]},
+ base:{name:"Baseline File",dom:"SOCIAL",tip:"One file per recurring person. Deviations from baseline, in clusters, are the signal.",fields:[
+   {k:"q",t:"text",label:"Subject (alias only)"},
+   {k:"b",t:"area",label:"Baseline: speech pace, gesture level, eye contact, posture, humor style, energy"},
+   {k:"l",t:"area",label:"Levers: what they want, what they avoid, which of the 7 levers they respond to"},
+   {k:"d",t:"area",label:"Deviation log — date | what changed | topic on the table | later confirmed?"}]},
+ aar:{name:"After-Action Review",dom:"STRATEGY",tip:"For any operation, test, negotiation, or week that mattered.",fields:[
+   {k:"q",t:"text",label:"Event"},
+   {k:"p",t:"area",label:"What was planned / predicted (with your stated probability)"},
+   {k:"o",t:"area",label:"What actually happened"},
+   {k:"w",t:"area",label:"Where the OODA loop broke: Observe / Orient / Decide / Act — and the fix the next operation inherits"}]}
+};
+let wsCur=null, wsEdit=null, wsOpen=null;
+function renderWS(){
+  const t=wsCur?WS_TPL[wsCur]:null;
+  const ed=wsEdit!==null?S.worksheets[wsEdit]:null;
+  document.getElementById("tab-ws").innerHTML=`
+  <div class="panel"><h2>Analyst Worksheets <span class="tag">+20 XP per completed worksheet</span></h2>
+    <div class="xs mut" style="margin-bottom:10px">Externalized reasoning can be inspected and attacked; reasoning kept in your head cannot. These are the structured techniques from the curriculum, run entirely in-app. Your strategy and social blocks should produce one of these most weeks.</div>
+    <div class="wspick">${Object.keys(WS_TPL).map(k=>`<button class="${wsCur===k?'act':'ghost'}" onclick="wsPick('${k}')">${WS_TPL[k].name.toUpperCase()}</button>`).join("")}</div>
+    ${t?`<div class="wsform">
+      <div class="xs mut" style="border-left:3px solid var(--red);padding-left:10px">${esc(t.tip)}</div>
+      ${t.fields.map(f=>`<label>${esc(f.label)}</label>${
+        f.t==="text"?`<input type="text" id="wsf-${f.k}" placeholder="${esc(f.ph||"")}" value="${ed?esc(ed.data[f.k]||""):""}">`
+        :`<textarea id="wsf-${f.k}" placeholder="${esc(f.ph||"")}">${ed?esc(ed.data[f.k]||""):""}</textarea>`}`).join("")}
+      <div style="margin-top:12px"><button class="act" onclick="wsSave()">${ed?"UPDATE WORKSHEET":"FILE WORKSHEET (+20 XP)"}</button>
+      <button class="ghost" onclick="wsCur=null;wsEdit=null;renderWS()">CANCEL</button></div>
+    </div>`:""}
+  </div>
+  <div class="panel"><h2>Filed Worksheets <span class="tag">${S.worksheets.length} on record</span></h2>
+    ${S.worksheets.length?S.worksheets.map((w,i)=>({w,i})).reverse().map(({w,i})=>{
+      const tp=WS_TPL[w.tpl]; if(!tp) return "";
+      const open=wsOpen===i;
+      return `<div class="wsitem ${open?'open':''}">
+        <div class="wh" onclick="wsOpen=${open?'null':i};renderWS()">
+          <div><span class="dtag ${tp.dom}">${tp.dom}</span><b>${esc(tp.name)}</b> — ${esc((w.data.q||"").slice(0,60))||"untitled"}</div>
+          <span class="xs mut">${w.d}</span></div>
+        ${open?`<div class="wb">${tp.fields.map(f=>w.data[f.k]?`<div class="fld"><b>${esc(f.label)}</b><pre>${esc(w.data[f.k])}</pre></div>`:"").join("")}
+          <button class="ghost" onclick="wsCur='${w.tpl}';wsEdit=${i};renderWS();window.scrollTo(0,0)">EDIT</button>
+          <button class="ghost" style="border-color:var(--red);color:var(--red)" onclick="wsDel(${i})">DELETE</button></div>`:""}
+      </div>`;}).join("")
+    :`<div class="xs mut">Nothing filed yet. An analyst with no worksheets is a person with opinions.</div>`}
+  </div>`;
+}
+function wsPick(k){ wsCur=k; wsEdit=null; renderWS(); }
+function wsSave(){
+  const t=WS_TPL[wsCur]; if(!t) return;
+  const data={};
+  let filled=0;
+  t.fields.forEach(f=>{ const el=document.getElementById("wsf-"+f.k); data[f.k]=(el.value||"").trim(); if(data[f.k]) filled++; });
+  if(filled<2){ toast("COMPLETE THE WORKSHEET FIRST"); return; }
+  if(wsEdit!==null){ S.worksheets[wsEdit].data=data; toast("WORKSHEET UPDATED"); }
+  else{ S.worksheets.push({tpl:wsCur,d:todayStr(),data}); addXP(20,t.dom); toast("FILED — +20 XP"); }
+  wsCur=null; wsEdit=null; save(); renderWS(); renderDash(); renderHeader();
+}
+function wsDel(i){
+  if(confirm("Delete this worksheet?")){ S.worksheets.splice(i,1); wsOpen=null; save(); renderWS(); }
+}
+
+/* =====================================================
+   RENDER — DOCTRINE (static)
+   ===================================================== */
+function renderArch(){
+  document.getElementById("tab-arch").innerHTML=`
+  <div class="panel arch"><h2>The Doctrine</h2>
+    <p><b>Premise.</b> The White Room's fictional premise — that extraordinary capability is manufactured, not born — is directionally supported by everything we know about expertise: deliberate practice, spaced retrieval, stress inoculation, and years of compounding. What fiction compresses into a facility, you rebuild as a daily protocol. No shortcuts exist; a correct system plus time is the entire trick.</p>
+    <p><b>The engine (why this program is shaped this way).</b></p>
+    <ul>
+      <li><b>Deliberate practice</b> — training targets specific weaknesses at the edge of ability, with immediate feedback. Comfortable repetition is exercise, not practice. Sessions cap near 90 minutes because that's where elite performers across every studied field cap them.</li>
+      <li><b>Retrieval + spacing</b> — the two most robust findings in the science of learning. Everything worth keeping becomes a card. Reviews are daily and eternal.</li>
+      <li><b>Desirable difficulty</b> — interleave topics, test before ready, recall before re-reading. If study feels smooth, it isn't working.</li>
+      <li><b>Measurement</b> — the weekly battery exists because untested skills quietly rot, and because humans misremember their own progress in whichever direction flatters them.</li>
+      <li><b>Stress inoculation</b> — capability that evaporates under pressure was never capability. Arousal control gets trained into everything: cold, effort, confrontation, performance.</li>
+      <li><b>Consolidation</b> — sleep is a training session your brain runs on the day's material. Skipping it deletes reps you already paid for.</li>
+    </ul>
+    <h3>Weekly Structure (~90–120 min/day)</h3>
+    <ul>
+      <li><b>Daily core, every day (~28 min):</b> morning calibration (breath + objective + forecasts) · Kim's game · retrieval review · evening debrief (score forecasts, OODA note, bias caught).</li>
+      <li><b>Mon</b> — Mind: memory systems + dual n-back. <b>Tue</b> — Body: Zone 2 engine + doctrine reading. <b>Wed</b> — Social: fieldwork + technique block. <b>Thu</b> — Strategy: tradecraft + chess lab. <b>Fri</b> — Mind: deep work + math + Feynman. <b>Sat</b> — Body: surge + field. <b>Sun</b> — Evaluation battery + poker lab + planning.</li>
+      <li>Grease-the-groove strength runs in the background most days — it costs minutes, not blocks.</li>
+    </ul>
+    <h3>Rules of the Room</h3>
+    <ul>
+      <li>The core four are never skipped. Travel, illness, exams — the core four fit inside any day that includes being awake.</li>
+      <li>Numbers over narratives. If the metric didn't move, the story about why doesn't matter.</li>
+      <li>Conceal, don't perform. Train quietly. Capability announced is capability discounted — and an audience corrupts practice into performance.</li>
+      <li>The social arts are for reading the game and defending yourself, and for moving things ethically. Deceiving or harming people for advantage is the tell of someone who lacks real leverage. Ayanokoji is a cautionary tale wearing a uniform; take the discipline, leave the emptiness.</li>
+      <li>Miss a day, resume the next. Two missed days is a decision. Never miss twice.</li>
+    </ul>
+    <h3>Reading List (one at a time, 20 min/day, card everything)</h3>
+    <ul>
+      <li><i>Make It Stick</i> — Brown, Roediger, McDaniel (the science of learning; read first)</li>
+      <li><i>Moonwalking with Einstein</i> — Joshua Foer (memory arts)</li>
+      <li><i>Deep Work</i> — Cal Newport (attention)</li>
+      <li><i>Influence</i> — Robert Cialdini (the seven levers)</li>
+      <li><i>Never Split the Difference</i> — Chris Voss (tactical empathy)</li>
+      <li><i>What Every BODY Is Saying</i> — Joe Navarro (ex-FBI; baselining, honest about limits)</li>
+      <li><i>Thinking, Fast and Slow</i> — Daniel Kahneman (biases)</li>
+      <li><i>Superforecasting</i> — Tetlock & Gardner (calibration)</li>
+      <li><i>The Art of Strategy</i> — Dixit & Nalebuff (game theory)</li>
+      <li><i>Boyd</i> — Robert Coram (the OODA loop's inventor)</li>
+      <li><i>The Amateur's Mind</i> — Jeremy Silman (chess: how weaker players actually think, and the fix)</li>
+      <li><i>The Theory of Poker</i> — David Sklansky (the EV foundation everything else builds on)</li>
+      <li><i>The Mental Game of Poker</i> — Jared Tendler (tilt control — pairs directly with The Mask)</li>
+      <li><i>Peak</i> — Anders Ericsson (deliberate practice, from the source)</li>
+      <li>CIA, <i>A Tradecraft Primer: Structured Analytic Techniques</i> — free, declassified, on cia.gov</li>
+    </ul>
+    <h3>Primary Sources Behind This Program</h3>
+    <ul>
+      <li><a href="https://www.cia.gov/resources/csi/static/Tradecraft-Primer-apr09.pdf">CIA — A Tradecraft Primer (2009, declassified)</a> — structured analytic techniques, ACH, key assumptions check</li>
+      <li><a href="https://www.cia.gov/resources/csi/static/Memory-Techniques-For-Intelligence-March-2025.pdf">CIA CSI — Memory Techniques in the Intelligence Community</a> — mnemonic training effects on analyst recall</li>
+      <li><a href="https://en.wikipedia.org/wiki/Kim%27s_Game">Kim's Game</a> — scout-sniper and intelligence observation training</li>
+      <li><a href="https://www.nature.com/articles/s41598-021-82663-w">Scientific Reports — dual n-back vs. method of loci transfer effects</a></li>
+      <li><a href="https://onlinelibrary.wiley.com/doi/full/10.1002/acp.3550">Applied Cognitive Psychology — ACH effectiveness evidence (mixed)</a></li>
+      <li>Box breathing / SEAL "Big Four" arousal control — Divine, and controlled-breathing literature on vagal regulation</li>
+      <li>Zone 2 dose-response and 4×4 interval literature; Ericsson's practice-session findings; Bjork's desirable difficulties; Tetlock's Good Judgment Project</li>
+    </ul>
+    <p class="xs mut">Sobriety note: "brain training" claims are routinely oversold. This program deliberately uses only methods with real evidence (retrieval, spacing, loci, n-back with caveats, SIT, aerobic exercise) and treats everything else as skill practice, which transfers only to what you actually practice. That is also why it makes you practice the real thing.</p>
+  </div>`;
+}
+
+/* =====================================================
+   RENDER — RECORDS / SETTINGS
+   ===================================================== */
+function renderSet(){
+  const days=Object.keys(S.log).filter(d=>S.log[d].length).length;
+  const mins=Object.keys(S.log).reduce((a,d)=>a+S.log[d].reduce((x,id)=>x+(DRILLS[id]?DRILLS[id].min:0),0),0);
+  document.getElementById("tab-set").innerHTML=`
+  <div class="grid2">
+    <div class="panel"><h2>Subject Record</h2>
+      <div class="sm">Designation: <b>${esc(S.designation)}</b></div>
+      <div class="sm">Inducted: <b>${S.startDate}</b> (Day ${dayNumber()})</div>
+      <div class="sm">Active days: <b>${days}</b> · Logged training: <b>${Math.round(mins/60)}h ${mins%60}m</b></div>
+      <div class="sm">Total XP: <b>${S.xp}</b> · Level <b>${level()}</b> · <b class="rank-red">${rank().name}</b></div>
+      <hr class="hr">
+      <div class="kv" style="margin-bottom:6px">Rank Ladder</div>
+      ${RANKS.map(r=>`<div class="xs ${level()>=r.lv?'':'mut'}">${level()>=r.lv?"■":"□"} LV ${String(r.lv).padStart(2,"0")} — ${r.name} <span class="mut">· ${r.note}</span></div>`).join("")}
+    </div>
+    <div class="panel"><h2>Data Control</h2>
+      <div class="kv" style="margin-bottom:6px">Automatic memory</div>
+      <p class="sm mut" style="margin-bottom:8px">Progress saves itself to this browser in two layers after every action — nothing to manage, nothing to choose. Keep opening this same file in this same browser and the record is continuous. The only thing that can erase it is clearing this browser's site data, so export a backup once a week; IMPORT restores everything, anywhere.</p>
+      <div class="kv" style="margin-bottom:6px">Backup</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="ghost" onclick="exportData()">EXPORT BACKUP</button>
+        <button class="ghost" onclick="document.getElementById('imp').click()">IMPORT</button>
+        <input type="file" id="imp" accept=".json" style="display:none" onchange="importData(event)">
+      </div>
+      <hr class="hr">
+      <div class="kv" style="margin-bottom:6px">Rename designation</div>
+      <div style="display:flex;gap:8px"><input type="text" id="rn" value="${esc(S.designation)}" maxlength="24"><button class="ghost" onclick="rename()">SAVE</button></div>
+      <hr class="hr">
+      <button class="ghost" style="border-color:var(--red);color:var(--red)" onclick="wipe()">ERASE SUBJECT — TOTAL RESET</button>
+    </div>
+  </div>`;
+}
+function exportData(){
+  const blob=new Blob([JSON.stringify(S,null,1)],{type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
+  a.download="whiteroom_backup_"+todayStr()+".json"; a.click();
+  toast("BACKUP EXPORTED");
+}
+function importData(ev){
+  const f=ev.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{ try{ const s=JSON.parse(r.result);
+      if(!s.designation||s.xp===undefined) throw 0;
+      S=s; save(); document.getElementById("gate").style.display="none"; renderAll(); toast("RECORD RESTORED");
+    }catch(e){ toast("INVALID BACKUP FILE"); } };
+  r.readAsText(f);
+}
+function rename(){ const v=document.getElementById("rn").value.trim(); if(v){ S.designation=v; save(); renderAll(); toast("DESIGNATION UPDATED"); } }
+function wipe(){
+  if(confirm("Erase all progress permanently? The White Room keeps no duplicates.")){
+    localStorage.removeItem(KEY);
+    try{ IDB.del("state"); IDB.del("handle"); }catch(e){}
+    setTimeout(()=>location.reload(),200);
+  }
+}
+
+/* =====================================================
+   INIT
+   ===================================================== */
+function migrate(){ S.worksheets=S.worksheets||[]; S.forecasts=S.forecasts||[]; }
+function renderAll(){ migrate(); renderHeader(); renderDash(); renderToday(); renderTree(); renderEval(); renderWS(); renderArch(); renderSet(); }
+async function boot(){
+  // Resume chain, zero prompts: localStorage → IndexedDB mirror
+  if(!S){
+    try{ const raw=await IDB.get("state");
+      if(raw){ const s=JSON.parse(raw); if(s&&s.designation) S=s; }
+    }catch(e){}
+    if(S){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+  }
+  if(!S){
+    document.getElementById("gate").style.display="flex";
+    document.getElementById("gresume").style.display="block";
+  }
+  else{ renderAll(); }
+}
+boot();
+document.addEventListener("keydown",e=>{
+  if(e.key==="Enter" && document.getElementById("gate").style.display==="flex" && document.getElementById("gname")) enroll();
+});
+</script>
+</body>
+</html>
