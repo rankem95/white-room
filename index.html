@@ -262,7 +262,7 @@ footer{border-top:1px solid var(--soft); margin-top:30px; padding-top:12px; font
   <div id="tm-body"></div>
 </div></div>
 
-<footer>WHITE ROOM v2.0 — Memory is automatic: progress saves to this browser after every action. Export an occasional backup from RECORDS. This is a self-development tool; it is not medical, psychological, or legal advice.</footer>
+<footer>WHITE ROOM v2.1 — Memory is automatic: progress saves to this browser after every action. Export an occasional backup from RECORDS. This is a self-development tool; it is not medical, psychological, or legal advice.</footer>
 </div>
 
 <div id="toast"></div>
@@ -341,7 +341,7 @@ guide:`<h4>Why</h4><p>The illusion of knowledge is the default human state. The 
 brief:"Calculus doesn't fail on calculus — it fails on algebra. Find and seal every crack first.",
 guide:`<h4>Why</h4><p>Analysis of calculus failure shows most of it is algebra and trig failure wearing a disguise: sign errors, exponent laws, identity gaps, function illiteracy. Two weeks of ruthless auditing here buys months downstream.</p>
 <h4>Protocol</h4><ul>
-<li><b>Diagnose:</b> run Khan Academy's course challenges for Algebra I, Algebra II, and Trigonometry. Score honestly. Anything under 90% is a declared gap — list them.</li>
+<li><b>Diagnose:</b> run the in-app DIAGNOSTIC (EVALUATIONS → Math Trials). It tests all six topic areas and builds your Weakness Map automatically — the map's priority target is your marching order. Supplement with Khan Academy course challenges for depth; under 90% anywhere is a declared gap.</li>
 <li><b>The Trap Ledger:</b> start a permanent error log. Every mistake in all math work, forever, gets classified: concept gap / mechanical slip / known trap. The ledger, not the textbook, is your personal curriculum.</li>
 <li><b>Card the machinery into Anki:</b> exponent and log laws, factoring patterns, the unit circle, core trig identities (Pythagorean, double angle), function transformations. ~50 cards, reviewed in your daily Retrieval block.</li>
 <li><b>Function fluency:</b> domains, inverses, composition, and graph-sketching by transformation — drill until you can sketch any standard function's variant in seconds.</li>
@@ -352,7 +352,7 @@ brief:"Instantaneous change — the most useful idea in applied mathematics. Int
 guide:`<h4>Why</h4><p>The derivative is where calculus starts paying rent: optimization, rates, approximation — half of physics, economics, and ML lives here. The failure mode is memorizing rules without the idea; the fix is intuition before mechanics, then mechanics until automatic.</p>
 <h4>Protocol</h4><ul>
 <li><b>Intuition first:</b> watch 3Blue1Brown's Essence of Calculus for each topic BEFORE the textbook. Then run a Feynman Extraction (Worksheets tab) on: the limit definition, and why the chain rule works. If you can't derive d/dx(x²) from the limit definition on a blank page, you don't have it yet.</li>
-<li><b>Fluency drills:</b> daily sets mixing power, product, quotient, and chain rules. Target: 20 standard derivatives in under 10 minutes at 95%. Log the time weekly in EVALUATIONS.</li>
+<li><b>Fluency drills:</b> the in-app DERIVATIVE DRILL (EVALUATIONS → Math Trials) generates, times, and grades 20 problems mixing power, product, quotient, and chain rules. Target: under 10 minutes at 95%. Run it near-daily; record it weekly.</li>
 <li><b>Applications (3 word problems/week):</b> optimization, related rates, linear approximation. Word problems are where understanding is tested; drills alone create an illusion of skill.</li>
 <li><b>Graph literacy:</b> given f, sketch f′ and f″ and vice versa — the relationships, not the rules, are what exams and reality probe.</li>
 <li><b>Every error → Trap Ledger + Anki card of the trap.</b></li></ul>
@@ -366,7 +366,7 @@ guide:`<h4>Why</h4><p>Integration is where math stops being rule-following and b
 <li><b>…then Mixed Fridays:</b> problem sets drawing on ALL techniques learned so far, unlabeled. Choosing the technique is the rep. This is the desirable-difficulty doctrine applied to calculus.</li>
 <li><b>Applications:</b> areas, volumes of revolution, average value, basic separable ODEs — 2/week.</li>
 <li><b>Series:</b> geometric and p-series, ratio test, then Taylor polynomials — with the point stated plainly: Taylor series are how calculators, physics, and simulations actually compute things.</li>
-<li><b>The weekly Gauntlet:</b> 10 mixed problems spanning everything since mm1, 45 minutes, scored. Log the % in EVALUATIONS — this is your primary math metric.</li></ul>
+<li><b>The weekly Gauntlet:</b> the in-app GAUNTLET generates 10 problems spanning all six topics, unlabeled, grades them, and records your % with one click — your primary math number. Textbook problems remain your depth work; the Gauntlet is the measurement.</li></ul>
 <h4>Mastery</h4><p>Gauntlet ≥80% three weeks running; each technique explained with WHEN to use it; Taylor expansions of eˣ, sin x, cos x from memory with an intuition for the error term.</p>`},
 {id:"mm4",domain:"MIND",tier:4,name:"Math IV — Problem-Craft",
 brief:"Computation is the entry fee. Pólya's loop — understand, plan, execute, review — is the actual skill.",
@@ -718,7 +718,7 @@ const STEPS = {
    "Then 5 minutes on this week's technique: ×11 trick, squares ending in 5, difference of squares (47×53 = 50²−9), or percentage flips.",
    "Friday extra: one Fermi estimate ('how many X in this city?') — decompose, estimate a range, then look up the truth and score yourself." ],
  calc:[ "Open your current Math node in the Curriculum tab (start: Foundation Audit) — this block executes its protocol.",
-   "Warm-up (8 min): 5 problems from PAST topics, interleaved — pulled from your Trap Ledger and Anki, not from the current chapter. Retrieval before new input, always.",
+   "Warm-up (8 min): run an ADAPTIVE DRILL (EVALUATIONS → Math Trials) — 10 generated problems weighted toward your measured weak topics. Retrieval before new input, always.",
    "New material (10 min): ONE concept. Intuition first (3Blue1Brown for calculus topics), then read the formal version. Close everything and Feynman-explain it to a blank page.",
    "Problems (rest of block): work the new concept until 3 consecutive clean solves. No answer-peeking before a full attempt.",
    "Every error goes in the Trap Ledger classified as concept / slip / trap, and the trap becomes an Anki card tonight.",
@@ -816,9 +816,9 @@ const METRICS = [
  {id:"mathT", name:"20 Multiplications Time", unit:"min", dir:-1, dom:"MIND",
   how:"20 random two-digit × two-digit problems, mental only, write answers. Record minutes; only count if accuracy ≥90%."},
  {id:"deriv", name:"Derivative Drill Time", unit:"min", dir:-1, dom:"MIND",
-  how:"20 standard derivatives (power/product/quotient/chain mixed), from any drill sheet. Use the focus timer. Counts only at ≥95% correct. Unlocked once you reach Math II."},
+  how:"▶ RUN TEST: the program generates 20 derivative evaluations, times you, and grades them. Records only at ≥95% correct. Target: under 10 minutes."},
  {id:"gaunt", name:"Calculus Gauntlet", unit:"%", dir:1, dom:"MIND",
-  how:"Weekly: 10 mixed problems spanning ALL math topics covered so far, unlabeled, 45 minutes. Record percent fully correct. Technique selection under interleaving is the real skill being measured."},
+  how:"▶ RUN TEST: 10 generated problems across all six topics, unlabeled and interleaved, auto-graded and recorded. Technique selection under interleaving is the real skill being measured."},
  {id:"focus", name:"Longest Clean Focus Block", unit:"min", dir:1, dom:"MIND",
   how:"Longest single deep-work block this week with ≤3 distraction ticks."},
  {id:"nback", name:"Dual N-Back Level", unit:"n", dir:1, dom:"MIND",
@@ -1218,6 +1218,16 @@ function renderEval(){
       <button class="act" style="margin-left:8px" onclick="recordValue('calib',${st.rate})">RECORD ${st.rate}% TO CALIBRATION METRIC</button></div>`
     :`<div class="xs mut">Resolve forecasts to compute your calibration.</div>`}
   </div>
+  <div class="panel"><h2>Math Trials <span class="tag">generated · graded · profiled — all in-app</span></h2>
+    <div class="xs mut" style="margin-bottom:10px">The program writes the problems, runs the clock, grades the answers, and maintains a live map of where you are weak. The Adaptive Drill aims at your worst topics automatically; the map's priority target tells you what to fix and where.</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="act" onclick="mathTrial('diag')">▶ DIAGNOSTIC (12)</button>
+      <button class="ghost" onclick="mathTrial('drill')">ADAPTIVE DRILL (10)</button>
+      <button class="ghost" onclick="mathTrial('deriv')">DERIVATIVE DRILL (20 · timed)</button>
+      <button class="ghost" onclick="mathTrial('gaunt')">GAUNTLET (10 · records %)</button>
+    </div>
+    ${weaknessMap()}
+  </div>
   <div class="panel"><h2>Weekly Assessment Battery <span class="tag">+15 XP per metric recorded · test day: Sunday</span></h2>
   <div class="xs mut" style="margin-bottom:12px">The White Room does not grade effort. It graphs numbers. Metrics marked <b>RUN TEST</b> are administered, timed, and scored by the program itself — no honor system. The rest are physical or external; test them as instructed and enter the result. Trend lines: <b class="ok">green = improving</b>, <b class="rank-red">red = regressing</b>.</div>
   ${METRICS.map(m=>{
@@ -1263,10 +1273,11 @@ function recMetric(id){
    Metrics with an engine are tested inside the program:
    generation, timing, and scoring are automatic.
    ===================================================== */
-const TESTABLE={digit:1,words:1,mathT:1,nback:1,kimS:1,plank:1,cold:1,rhr:1};
+const TESTABLE={digit:1,words:1,mathT:1,nback:1,kimS:1,plank:1,cold:1,rhr:1,deriv:1,gaunt:1};
 function runTest(id){
   ({digit:dsStart, words:wtStart, mathT:mtStart, nback:nbStart, kimS:kimStart,
-    plank:()=>swStart("plank"), cold:()=>swStart("cold"), rhr:tapStart}[id])();
+    plank:()=>swStart("plank"), cold:()=>swStart("cold"), rhr:tapStart,
+    deriv:()=>mathTrial("deriv"), gaunt:()=>mathTrial("gaunt")}[id])();
 }
 const TM={
   h:null,t:null,
@@ -1604,6 +1615,149 @@ function fcStats(){
   return {n:done.length, rate:Math.round(100*hits/done.length), avgP};
 }
 /* =====================================================
+   MATH TRIALS — generated, graded, and profiled in-app
+   ===================================================== */
+const MTOPICS=[
+ {id:"alg",name:"Algebra Foundations",node:"mm1",fix:"Foundation Audit drills (Math I): exponent laws, factoring, linear manipulation into Anki."},
+ {id:"fun",name:"Functions & Trig",node:"mm1",fix:"Unit circle + composition/inverse drills (Math I); card the standard values."},
+ {id:"lim",name:"Limits",node:"mm2",fix:"Limit definition via 3B1B + a Feynman extraction (Math II); factor-and-cancel practice."},
+ {id:"der",name:"Derivatives",node:"mm2",fix:"Daily Derivative Drill (Math II) until it passes at 95% under 10 minutes."},
+ {id:"int",name:"Integrals",node:"mm3",fix:"Technique ladder + Mixed Fridays (Math III); selection before execution."},
+ {id:"ser",name:"Series",node:"mm3",fix:"Geometric/p-series and Taylor work (Math III); card the convergence tests."}
+];
+function ri(a,b){ return a+Math.floor(Math.random()*(b-a+1)); }
+function supN(n){ return {2:"²",3:"³",4:"⁴"}[n]||("^"+n); }
+const MGEN={
+ alg:[
+  ()=>{const a=ri(2,9),x=ri(2,9),b=ri(1,20);return{q:`Solve for x:   ${a}x + ${b} = ${a*x+b}`,a:x};},
+  ()=>{const a=ri(2,5),b=ri(2,5);return{q:`2${supN(a)} · 2${supN(b)} = 2ᵏ.   k = ?`,a:a+b};},
+  ()=>{const p=ri(1,6),q2=ri(p+1,9);return{q:`The SMALLER root of   x² − ${p+q2}x + ${p*q2} = 0`,a:p};},
+  ()=>{const k=ri(2,6);return{q:`log₂(${2**k}) = ?`,a:k};},
+  ()=>{const a=ri(2,4),n=ri(2,3);return{q:`(${a}${supN(2)})${supN(n)} = ${a}ᵏ.   k = ?`,a:2*n};}],
+ fun:[
+  ()=>{const a=ri(2,5),b=ri(1,9),c=ri(1,4);return{q:`f(x) = ${a}x + ${b},  g(x) = x².   f(g(${c})) = ?`,a:a*c*c+b};},
+  ()=>{const t=[["sin(30°)",.5],["cos(60°)",.5],["sin(90°)",1],["cos(0°)",1],["tan(45°)",1],["sin(0°)",0],["cos(90°)",0]][ri(0,6)];return{q:`${t[0]} = ?   (decimals or fractions accepted)`,a:t[1]};},
+  ()=>{const a=ri(2,5),b=ri(1,9),y=ri(1,5);return{q:`f(x) = ${a}x + ${b}.   f⁻¹(${a*y+b}) = ?`,a:y};},
+  ()=>{const a=ri(1,4),c=ri(1,3);return{q:`f(x) = x² − ${a}.   f(f(${c})) uses f twice... first f(${c}) = ?`,a:c*c-a};}],
+ lim:[
+  ()=>{const c=ri(2,7);return{q:`lim (x→${c})   (x² − ${c*c}) / (x − ${c})`,a:2*c};},
+  ()=>{const b=ri(1,4),k=ri(2,5);return{q:`lim (x→∞)   (${b*k}x² + x) / (${b}x² + 5)`,a:k};},
+  ()=>{const k=ri(2,7);return{q:`lim (x→0)   sin(${k}x) / x`,a:k};},
+  ()=>{const a=ri(1,5);return{q:`lim (x→0)   (eˣ − 1) / x  ... then multiply the result by ${a}`,a:a};}],
+ der:[
+  ()=>{const a=ri(1,5),n=ri(2,4),x0=ri(1,3);return{q:`f(x) = ${a}x${supN(n)}.   f′(${x0}) = ?`,a:n*a*x0**(n-1)};},
+  ()=>{const a=ri(1,4),b=ri(1,9),x0=ri(1,4);return{q:`f(x) = ${a}x³ + ${b}x.   f′(${x0}) = ?`,a:3*a*x0*x0+b};},
+  ()=>{const a=ri(2,4),b=ri(1,5),x0=ri(0,3);return{q:`f(x) = (${a}x + ${b})².   f′(${x0}) = ?   [chain rule]`,a:2*a*(a*x0+b)};},
+  ()=>{const k=ri(2,6);return{q:`f(x) = e^(${k}x).   f′(0) = ?`,a:k};},
+  ()=>{const k=ri(2,6);return{q:`f(x) = sin(${k}x).   f′(0) = ?`,a:k};},
+  ()=>{const a=ri(1,4),x0=ri(1,3);return{q:`f(x) = x²(x + ${a}).   f′(${x0}) = ?   [expand or product rule]`,a:3*x0*x0+2*a*x0};},
+  ()=>{const a=ri(2,5),b=ri(1,6),x0=ri(1,3);return{q:`Slope of the tangent to  y = ${a}x² − ${b}  at  x = ${x0}`,a:2*a*x0};}],
+ int:[
+  ()=>{const a=ri(1,5),b=2*ri(1,3);return{q:`∫₀^${b}   ${a}x dx = ?`,a:a*b*b/2};},
+  ()=>{const b=ri(1,3);return{q:`∫₀^${b}   3x² dx = ?`,a:b**3};},
+  ()=>({q:`∫₁^e   (1/x) dx = ?`,a:1}),
+  ()=>({q:`∫₀^π   sin x dx = ?`,a:2}),
+  ()=>{const b=ri(1,2);return{q:`∫₀^${b}   2x(x² + 1) dx = ?   [u = x² + 1]`,a:((b*b+1)**2-1)/2};},
+  ()=>{const a=ri(1,4),b=ri(1,3);return{q:`∫₀^${b}   (${2*a}x + 1) dx = ?`,a:a*b*b+b};}],
+ ser:[
+  ()=>{const a=[6,8,12][ri(0,2)];return{q:`Σ (n=0→∞)   ${a}·(1/2)ⁿ = ?`,a:2*a};},
+  ()=>{const n=ri(5,12);return{q:`1 + 2 + 3 + … + ${n} = ?`,a:n*(n+1)/2};},
+  ()=>({q:`Coefficient of x² in the Taylor series of eˣ (about 0) = ?`,a:.5}),
+  ()=>{const a=ri(2,5);return{q:`Σ (n=0→∞)   ${a}·(1/3)ⁿ = ?  (answer may be a fraction like ${a*3}/2)`,a:1.5*a};}]
+};
+function mtPick(t){ const g=MGEN[t]; const p=g[ri(0,g.length-1)](); return {t:t,q:p.q,a:p.a}; }
+function topicAcc(t){ const P=S.mathProf[t]; return (P&&P.n>=1)?(P.ok/P.n):null; }
+function mtWeighted(){ 
+  const w=MTOPICS.map(t=>{const a=topicAcc(t.id); return a===null?1:Math.max(0.15,1.15-a);});
+  const sum=w.reduce((x,y)=>x+y,0); let r=Math.random()*sum;
+  for(let i=0;i<w.length;i++){ r-=w[i]; if(r<=0) return MTOPICS[i].id; }
+  return MTOPICS[0].id;
+}
+function parseAns(s){
+  s=String(s||"").trim().replace(",",".");
+  const m=s.match(/^(-?\d+(?:\.\d+)?)\s*\/\s*(-?\d+(?:\.\d+)?)$/);
+  if(m) return parseFloat(m[1])/parseFloat(m[2]);
+  const v=parseFloat(s); return isNaN(v)?null:v;
+}
+let MTS={};
+function mathTrial(mode){
+  const list=[];
+  if(mode==="diag") MTOPICS.forEach(t=>{ list.push(mtPick(t.id)); list.push(mtPick(t.id)); });
+  else if(mode==="drill") for(let i=0;i<10;i++) list.push(mtPick(mtWeighted()));
+  else if(mode==="deriv") for(let i=0;i<20;i++) list.push(mtPick("der"));
+  else { MTOPICS.forEach(t=>list.push(mtPick(t.id))); for(let i=0;i<4;i++) list.push(mtPick(mtWeighted())); }
+  for(let i=list.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [list[i],list[j]]=[list[j],list[i]]; }
+  MTS={mode,list,i:0,res:[],t0:0};
+  const titles={diag:"MATH DIAGNOSTIC — 12 PROBLEMS",drill:"ADAPTIVE DRILL — 10 PROBLEMS",deriv:"DERIVATIVE DRILL — 20 TIMED",gaunt:"CALCULUS GAUNTLET — 10 TIMED"};
+  const notes={diag:"Two problems per topic across all six areas. Builds your weakness map — answer honestly, guessing corrupts your own targeting data.",
+    drill:"Ten problems weighted toward your measured weak topics. This is your calculus warm-up.",
+    deriv:"Twenty derivative evaluations. Timer runs; ≥95% required to record. Mental work + one number per answer.",
+    gaunt:"All six topics, unlabeled, interleaved. Records your primary math metric."};
+  TM.open(titles[mode]);
+  TM.body(`<div class="tm-ctr"><p class="sm">${notes[mode]}</p>
+    <p class="xs mut">Answers are numbers — decimals (0.5) and fractions (1/2) both accepted. Paper for working is allowed and encouraged; calculators are not.</p>
+    <div style="margin-top:14px"><button class="act" onclick="MTS.t0=Date.now();mtsQ()">BEGIN</button></div></div>`);
+}
+function mtsQ(){
+  const p=MTS.list[MTS.i], tn=MTOPICS.find(t=>t.id===p.t).name;
+  const el=Math.floor((Date.now()-MTS.t0)/1000);
+  TM.body(`<div class="tm-stat">problem ${MTS.i+1}/${MTS.list.length} · <span class="dtag MIND">${tn.toUpperCase()}</span> · ${Math.floor(el/60)}:${String(el%60).padStart(2,"0")}</div>
+    <div class="tm-mid" style="margin:18px 0;font-size:22px">${p.q}</div>
+    <div class="tm-ctr"><input type="text" inputmode="decimal" id="mts-in" style="max-width:200px;text-align:center;font-size:20px" autocomplete="off">
+    <div style="margin-top:10px"><button class="act" onclick="mtsA()">NEXT</button></div></div>`);
+  const inp=document.getElementById("mts-in"); inp.focus();
+  window.onkeydown=e=>{ if(e.key==="Enter") mtsA(); };
+}
+function mtsA(){
+  window.onkeydown=null;
+  const p=MTS.list[MTS.i], v=parseAns(document.getElementById("mts-in").value);
+  const ok=v!==null && Math.abs(v-p.a)<=Math.max(0.011,0.011*Math.abs(p.a));
+  MTS.res.push({t:p.t,ok:ok,q:p.q,a:p.a});
+  MTS.i++;
+  if(MTS.i<MTS.list.length) mtsQ(); else mtsEnd();
+}
+function mtsEnd(){
+  // update recency-weighted profile
+  MTS.res.forEach(r=>{
+    const P=S.mathProf[r.t]||{n:0,ok:0};
+    P.n=P.n*0.9+1; P.ok=P.ok*0.9+(r.ok?1:0);
+    S.mathProf[r.t]=P;
+  });
+  save();
+  const okN=MTS.res.filter(r=>r.ok).length, tot=MTS.res.length;
+  const pct=Math.round(100*okN/tot), min=Math.round((Date.now()-MTS.t0)/6000)/10;
+  const byT={}; MTS.res.forEach(r=>{ byT[r.t]=byT[r.t]||{ok:0,n:0}; byT[r.t].n++; if(r.ok) byT[r.t].ok++; });
+  const rows=Object.keys(byT).map(t=>{const tn=MTOPICS.find(x=>x.id===t);const b=byT[t];
+    return `<div class="xs" style="margin-top:3px">${tn.name}: <b class="${b.ok===b.n?'ok':(b.ok===0?'rank-red':'')}">${b.ok}/${b.n}</b></div>`;}).join("");
+  const missed=MTS.res.filter(r=>!r.ok).slice(0,4).map(r=>`<div class="xs mut" style="margin-top:2px">✗ ${r.q} → <b>${r.a}</b></div>`).join("");
+  const weak=MTOPICS.filter(t=>topicAcc(t.id)!==null).sort((a,b)=>topicAcc(a.id)-topicAcc(b.id))[0];
+  let action="";
+  if(MTS.mode==="deriv") action = pct>=95
+    ? `<button class="act" onclick="recordValue('deriv',${min});TM.close()">RECORD ${min} MIN</button>`
+    : `<span class="rank-red xs">below the 95% floor — no record. Train, retest.</span> <button class="ghost" onclick="mathTrial('deriv')">RETEST</button>`;
+  else if(MTS.mode==="gaunt") action = `<button class="act" onclick="recordValue('gaunt',${pct});TM.close()">RECORD ${pct}%</button>`;
+  TM.body(`<div class="tm-ctr"><div class="tm-mid">${okN}/${tot} — ${pct}% · ${min} min</div></div>
+    <hr class="hr">${rows}
+    ${missed?`<hr class="hr"><div class="kv" style="margin-bottom:4px">Missed</div>${missed}`:""}
+    ${weak?`<hr class="hr"><div class="xs"><b class="rank-red">PRIORITY TARGET: ${weak.name}</b> — ${esc(weak.fix)}</div>`:""}
+    <div class="tm-ctr" style="margin-top:12px">${action} <button class="ghost" onclick="TM.close()">CLOSE</button></div>`);
+}
+function weaknessMap(){
+  const rows=MTOPICS.map(t=>{
+    const a=topicAcc(t.id);
+    const pct=a===null?null:Math.round(100*a);
+    return {t,pct};
+  }).sort((x,y)=>(x.pct===null?101:x.pct)-(y.pct===null?101:y.pct));
+  const any=rows.some(r=>r.pct!==null);
+  const weak=any?rows.find(r=>r.pct!==null):null;
+  return `<div class="kv" style="margin:10px 0 6px">Weakness Map <span class="mut">(recency-weighted accuracy)</span></div>
+  ${rows.map(({t,pct})=>`<div class="sm" style="margin-bottom:5px">${t.name} <span class="mut xs">${pct===null?"— untested":pct+"%"}</span>
+    <div class="bar" style="height:7px"><i class="${pct!==null&&pct<70?'red':''}" style="width:${pct===null?0:pct}%"></i></div></div>`).join("")}
+  ${weak?`<div class="xs" style="margin-top:8px"><b class="rank-red">PRIORITY: ${weak.t.name}</b> — ${esc(weak.t.fix)} <button class="howbtn" style="margin:0" onclick="goNode('${weak.t.node}')">OPEN NODE →</button></div>`
+       :`<div class="xs mut" style="margin-top:6px">Run the DIAGNOSTIC to build your map.</div>`}`;
+}
+
+/* =====================================================
    WORKSHEETS — analyst tradecraft, done in-app
    ===================================================== */
 const WS_TPL={
@@ -1832,7 +1986,7 @@ function wipe(){
 /* =====================================================
    INIT
    ===================================================== */
-function migrate(){ S.worksheets=S.worksheets||[]; S.forecasts=S.forecasts||[]; }
+function migrate(){ S.worksheets=S.worksheets||[]; S.forecasts=S.forecasts||[]; S.mathProf=S.mathProf||{}; }
 function renderAll(){ migrate(); renderHeader(); renderDash(); renderToday(); renderTree(); renderEval(); renderWS(); renderArch(); renderSet(); }
 function applyTheme(){
   let t="day"; try{ t=localStorage.getItem("whiteroom_theme")||"day"; }catch(e){}
