@@ -4,11 +4,23 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>WHITE ROOM — Cognitive Development Program</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#f5f5f2">
 <style>
 :root{
   --bg:#f5f5f2; --panel:#ffffff; --ink:#111113; --ink2:#55555a;
   --line:#111113; --soft:#d8d8d3; --red:#b5121b; --green:#1a6b3c; --gold:#8a6d1a;
 }
+[data-theme="dark"]{
+  --bg:#101012; --panel:#17171a; --ink:#e8e8e4; --ink2:#9a9aa0;
+  --line:#e8e8e4; --soft:#333338; --red:#e33540; --green:#3fae6e; --gold:#c9a83a;
+}
+[data-theme="dark"] .dtag.MIND{border-color:#7d9bf0; color:#7d9bf0;}
+.hm{display:grid; grid-auto-flow:column; grid-template-rows:repeat(7,12px); gap:3px; overflow-x:auto; padding-bottom:4px;}
+.hm i{width:12px; height:12px; border:1px solid var(--soft); flex:none;}
+.hm i.h1{background:var(--soft);}
+.hm i.h2{background:var(--ink2);}
+.hm i.h3{background:var(--ink);}
 *{box-sizing:border-box; margin:0; padding:0;}
 html{scroll-behavior:smooth;}
 body{
@@ -79,7 +91,7 @@ input[type=text],input[type=number],select,textarea{
 /* ---------- protocol list ---------- */
 .drill{display:flex; align-items:flex-start; gap:12px; border:1px solid var(--soft); border-left:3px solid var(--ink); padding:10px 12px; margin-bottom:8px; background:var(--panel);}
 .drill.done{opacity:.45; border-left-color:var(--green);}
-.drill input[type=checkbox]{width:18px; height:18px; margin-top:2px; accent-color:#111113; cursor:pointer; flex:none;}
+.drill input[type=checkbox]{width:18px; height:18px; margin-top:2px; accent-color:var(--ink); cursor:pointer; flex:none;}
 .drill .dn{font-weight:700; font-size:13px;}
 .drill .dm{font-size:11px; color:var(--ink2); text-transform:uppercase; letter-spacing:1px;}
 .drill .dd{font-size:12px; color:var(--ink2); margin-top:3px;}
@@ -221,6 +233,7 @@ footer{border-top:1px solid var(--soft); margin-top:30px; padding-top:12px; font
     <div class="h-meta">
       <b id="h-subject">SUBJECT —</b>
       <span id="h-day">DAY 0</span> · <span id="h-date"></span>
+      <div><button class="ghost" id="themebtn" onclick="toggleTheme()" style="margin-top:6px;padding:4px 10px">NIGHT</button></div>
     </div>
   </div>
 </header>
@@ -248,7 +261,7 @@ footer{border-top:1px solid var(--soft); margin-top:30px; padding-top:12px; font
   <div id="tm-body"></div>
 </div></div>
 
-<footer>WHITE ROOM v1.8 — Memory is automatic: progress saves to this browser after every action. Export an occasional backup from RECORDS. This is a self-development tool; it is not medical, psychological, or legal advice.</footer>
+<footer>WHITE ROOM v2.0 — Memory is automatic: progress saves to this browser after every action. Export an occasional backup from RECORDS. This is a self-development tool; it is not medical, psychological, or legal advice.</footer>
 </div>
 
 <div id="toast"></div>
@@ -928,7 +941,12 @@ function streak(){
   while((S.log[todayStr(d)]||[]).length){ n++; d.setDate(d.getDate()-1); }
   return n;
 }
-function addXP(n,dom){ S.xp+=n; if(dom&&S.domXP[dom]!==undefined) S.domXP[dom]+=n; save(); }
+function addXP(n,dom){
+  const pl=level();
+  S.xp+=n; if(dom&&S.domXP[dom]!==undefined) S.domXP[dom]+=n; save();
+  const nl=level();
+  if(nl>pl) setTimeout(()=>toast("LEVEL "+nl+" REACHED — CLASSIFICATION: "+rank().name),1600);
+}
 function toast(msg){ const t=document.getElementById("toast"); t.textContent=msg; t.style.display="block"; clearTimeout(t._h); t._h=setTimeout(()=>t.style.display="none",2600); }
 function esc(s){ return String(s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
 
@@ -959,6 +977,25 @@ document.querySelectorAll("nav button").forEach(b=>{
 /* =====================================================
    RENDER — HEADER + DASHBOARD
    ===================================================== */
+function bestStreak(){
+  const ds=Object.keys(S.log).filter(d=>S.log[d].length).sort();
+  let best=0,cur=0,prev=null;
+  for(const d of ds){
+    cur=(prev && (new Date(d)-new Date(prev))===86400000)?cur+1:1;
+    best=Math.max(best,cur); prev=d;
+  }
+  return best;
+}
+function heatmap(){
+  let cells=""; const today=new Date();
+  for(let i=118;i>=0;i--){
+    const d=new Date(); d.setDate(today.getDate()-i); const ds=todayStr(d);
+    const n=(S.log[ds]||[]).length;
+    const c=n===0?"":(n<3?"h1":(n<6?"h2":"h3"));
+    cells+=`<i class="${c}" title="${ds}: ${n} blocks"></i>`;
+  }
+  return `<div class="hm">${cells}</div>`;
+}
 function renderHeader(){
   document.getElementById("h-subject").textContent="SUBJECT: "+S.designation.toUpperCase();
   document.getElementById("h-day").textContent="DAY "+dayNumber();
@@ -1007,6 +1044,10 @@ function renderDash(){
     ${["MIND","SOCIAL","BODY","STRATEGY"].map(d=>`<div class="sm" style="margin-bottom:6px">${d} <span class="mut xs">${dxp[d]} XP</span>
       <div class="bar" style="height:8px"><i style="width:${Math.round(100*dxp[d]/maxD)}%"></i></div></div>`).join("")}
     <div class="xs mut" style="margin-top:8px">A lopsided chart is a lopsided operator. The schedule balances you; skipping days unbalances you.</div>
+  </div>
+  <div class="panel"><h2>Continuity Map <span class="tag">last 17 weeks · best streak: ${bestStreak()} days</span></h2>
+    ${heatmap()}
+    <div class="xs mut" style="margin-top:8px">Each cell is a day; darker means more blocks completed. The gaps are data too — the map does not negotiate.</div>
   </div>
   <div class="panel"><h2>Today's Focus <span class="tag">${sched.title}</span></h2>
     <div class="sm">${sched.drills.map(id=>`<span class="dtag ${DRILLS[id].dom}">${DRILLS[id].dom}</span>${esc(DRILLS[id].name)}`).join(" &nbsp;·&nbsp; ")}</div>
@@ -1792,6 +1833,20 @@ function wipe(){
    ===================================================== */
 function migrate(){ S.worksheets=S.worksheets||[]; S.forecasts=S.forecasts||[]; }
 function renderAll(){ migrate(); renderHeader(); renderDash(); renderToday(); renderTree(); renderEval(); renderWS(); renderArch(); renderSet(); }
+function applyTheme(){
+  let t="day"; try{ t=localStorage.getItem("whiteroom_theme")||"day"; }catch(e){}
+  document.documentElement.dataset.theme=(t==="night")?"dark":"";
+  const b=document.getElementById("themebtn"); if(b) b.textContent=(t==="night")?"DAY":"NIGHT";
+  const m=document.querySelector('meta[name="theme-color"]'); if(m) m.content=(t==="night")?"#101012":"#f5f5f2";
+}
+function toggleTheme(){
+  let t="day"; try{ t=localStorage.getItem("whiteroom_theme")||"day"; }catch(e){}
+  t=(t==="day")?"night":"day";
+  try{ localStorage.setItem("whiteroom_theme",t); }catch(e){}
+  applyTheme();
+}
+applyTheme();
+try{ if("serviceWorker" in navigator && location.protocol==="https:") navigator.serviceWorker.register("sw.js").catch(()=>{}); }catch(e){}
 async function boot(){
   // Resume chain, zero prompts: localStorage → IndexedDB mirror
   if(!S){

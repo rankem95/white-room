@@ -1,0 +1,12 @@
+{
+  "name": "White Room — Cognitive Development Program",
+  "short_name": "White Room",
+  "description": "Master-of-all-trades training program and tracker.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f5f5f2",
+  "theme_color": "#f5f5f2",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
