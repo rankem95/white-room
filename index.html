@@ -248,7 +248,7 @@ footer{border-top:1px solid var(--soft); margin-top:30px; padding-top:12px; font
   <div id="tm-body"></div>
 </div></div>
 
-<footer>WHITE ROOM v1.7 — Memory is automatic: progress saves to this browser after every action. Export an occasional backup from RECORDS. This is a self-development tool; it is not medical, psychological, or legal advice.</footer>
+<footer>WHITE ROOM v1.8 — Memory is automatic: progress saves to this browser after every action. Export an occasional backup from RECORDS. This is a self-development tool; it is not medical, psychological, or legal advice.</footer>
 </div>
 
 <div id="toast"></div>
@@ -323,6 +323,47 @@ guide:`<h4>Why</h4><p>The illusion of knowledge is the default human state. The 
 <li>Compress to one paragraph, then one sentence. Card the sentence into spaced repetition.</li>
 <li>Weekly: one full extraction on something from your field, plus one from a foreign field (rotating: economics, biology, law, physics, history).</li></ul>
 <h4>Mastery</h4><p>12 completed extractions, including 4 outside your home field, each survived a week-later blind re-explanation.</p>`},
+{id:"mm1",domain:"MIND",tier:2,name:"Math I — The Foundation Audit",
+brief:"Calculus doesn't fail on calculus — it fails on algebra. Find and seal every crack first.",
+guide:`<h4>Why</h4><p>Analysis of calculus failure shows most of it is algebra and trig failure wearing a disguise: sign errors, exponent laws, identity gaps, function illiteracy. Two weeks of ruthless auditing here buys months downstream.</p>
+<h4>Protocol</h4><ul>
+<li><b>Diagnose:</b> run Khan Academy's course challenges for Algebra I, Algebra II, and Trigonometry. Score honestly. Anything under 90% is a declared gap — list them.</li>
+<li><b>The Trap Ledger:</b> start a permanent error log. Every mistake in all math work, forever, gets classified: concept gap / mechanical slip / known trap. The ledger, not the textbook, is your personal curriculum.</li>
+<li><b>Card the machinery into Anki:</b> exponent and log laws, factoring patterns, the unit circle, core trig identities (Pythagorean, double angle), function transformations. ~50 cards, reviewed in your daily Retrieval block.</li>
+<li><b>Function fluency:</b> domains, inverses, composition, and graph-sketching by transformation — drill until you can sketch any standard function's variant in seconds.</li>
+<li><b>Daily dose:</b> 10 minutes of interleaved problems from your gap list inside the Calculus Block until the audit is clean.</li></ul>
+<h4>Mastery</h4><p>≥90% on all three diagnostics; foundation deck mature in Anki; 20 consecutive days of the Trap Ledger in use.</p>`},
+{id:"mm2",domain:"MIND",tier:3,name:"Math II — The Derivative",
+brief:"Instantaneous change — the most useful idea in applied mathematics. Intuition first, then ruthless fluency.",
+guide:`<h4>Why</h4><p>The derivative is where calculus starts paying rent: optimization, rates, approximation — half of physics, economics, and ML lives here. The failure mode is memorizing rules without the idea; the fix is intuition before mechanics, then mechanics until automatic.</p>
+<h4>Protocol</h4><ul>
+<li><b>Intuition first:</b> watch 3Blue1Brown's Essence of Calculus for each topic BEFORE the textbook. Then run a Feynman Extraction (Worksheets tab) on: the limit definition, and why the chain rule works. If you can't derive d/dx(x²) from the limit definition on a blank page, you don't have it yet.</li>
+<li><b>Fluency drills:</b> daily sets mixing power, product, quotient, and chain rules. Target: 20 standard derivatives in under 10 minutes at 95%. Log the time weekly in EVALUATIONS.</li>
+<li><b>Applications (3 word problems/week):</b> optimization, related rates, linear approximation. Word problems are where understanding is tested; drills alone create an illusion of skill.</li>
+<li><b>Graph literacy:</b> given f, sketch f′ and f″ and vice versa — the relationships, not the rules, are what exams and reality probe.</li>
+<li><b>Every error → Trap Ledger + Anki card of the trap.</b></li></ul>
+<h4>Mastery</h4><p>Derivative drill under 10 min at ≥95%, twice; limit definition and chain rule explained from scratch (filed Feynman worksheets); 15 clean application problems in the ledger.</p>`},
+{id:"mm3",domain:"MIND",tier:4,name:"Math III — The Integral & Series",
+brief:"Accumulation, the Fundamental Theorem, and the art of choosing the right technique.",
+guide:`<h4>Why</h4><p>Integration is where math stops being rule-following and becomes problem-solving: the skill is technique SELECTION, not technique execution. That's why this node runs on interleaving — mixed problems force the choice that blocked practice never does.</p>
+<h4>Protocol</h4><ul>
+<li><b>The Fundamental Theorem first:</b> Feynman-extract why differentiation and integration are inverses. This one idea organizes everything after it.</li>
+<li><b>Technique ladder, one per week:</b> u-substitution → integration by parts → trig substitution → partial fractions. Learn each in isolation Monday–Thursday…</li>
+<li><b>…then Mixed Fridays:</b> problem sets drawing on ALL techniques learned so far, unlabeled. Choosing the technique is the rep. This is the desirable-difficulty doctrine applied to calculus.</li>
+<li><b>Applications:</b> areas, volumes of revolution, average value, basic separable ODEs — 2/week.</li>
+<li><b>Series:</b> geometric and p-series, ratio test, then Taylor polynomials — with the point stated plainly: Taylor series are how calculators, physics, and simulations actually compute things.</li>
+<li><b>The weekly Gauntlet:</b> 10 mixed problems spanning everything since mm1, 45 minutes, scored. Log the % in EVALUATIONS — this is your primary math metric.</li></ul>
+<h4>Mastery</h4><p>Gauntlet ≥80% three weeks running; each technique explained with WHEN to use it; Taylor expansions of eˣ, sin x, cos x from memory with an intuition for the error term.</p>`},
+{id:"mm4",domain:"MIND",tier:4,name:"Math IV — Problem-Craft",
+brief:"Computation is the entry fee. Pólya's loop — understand, plan, execute, review — is the actual skill.",
+guide:`<h4>Why</h4><p>Past fluency, mathematical strength is a thinking discipline: attacking problems you don't know how to solve. Pólya mapped the loop in 1945 and nobody has improved on it: understand the problem → devise a plan → carry it out → look back.</p>
+<h4>Protocol</h4><ul>
+<li><b>Boss problems (1–2/week):</b> problems clearly beyond your comfort — competition warm-ups, hardest textbook starred problems, Paul's Online Notes challenge sets. Rule: 45 minutes of genuine struggle before any hint. The struggle IS the training; a hint taken early refunds nothing.</li>
+<li><b>File a Pólya Autopsy worksheet (Worksheets tab) for every boss problem</b> — including the failures. Especially the failures.</li>
+<li><b>Proof literacy:</b> induction and contradiction as writing skills; epsilon-delta as a reading skill. 5 written proofs total is enough to change how you see the subject.</li>
+<li><b>"Why" discipline:</b> every theorem you invoke gets a one-line justification in your solution. No incantations.</li>
+<li><b>Monthly ledger review:</b> extract your top-3 recurring traps from the Trap Ledger and design one guard each — this loop is the entire reason the ledger exists.</li></ul>
+<h4>Mastery</h4><p>12 boss problems with filed Pólya autopsies; 3 induction + 2 contradiction proofs written; Gauntlet error rate halved from your mm3 baseline.</p>`},
 {id:"m8",domain:"MIND",tier:5,name:"Capstone: The Deck",
 brief:"Memorize a shuffled deck of 52 cards. The graduation exam of the memory arts.",
 guide:`<h4>Why</h4><p>A shuffled deck integrates everything: loci (a 26-locus palace), a card-image system, encoding speed, and recall discipline. It is also an unfakeable demonstration — to yourself — that your memory is now an instrument.</p>
@@ -613,6 +654,7 @@ const DRILLS = {
   mem:  {name:"Memory Systems Block", dom:"MIND", min:30, desc:"Current memory node: palace drills, Major System pegs, or card deck work per your curriculum tier."},
   dnb:  {name:"Dual N-Back",          dom:"MIND", min:15, desc:"Brain Workshop or app. Fresh brain only. Log average n-level in weekly evaluation."},
   math: {name:"Combat Math",          dom:"MIND", min:15, desc:"20 timed two-digit multiplications + one mental-math technique rep. Fridays: add a Fermi estimate."},
+  calc: {name:"Calculus Block",       dom:"MIND", min:30, desc:"Warm-up retrieval, one new concept (intuition first), then problems until clean. Every error feeds the Trap Ledger. Per your current math node."},
   deep: {name:"Deep Work Block",      dom:"MIND", min:45, desc:"One objective, phone exiled, distraction tally on paper. Use the timer below. Extend 5 min weekly."},
   feyn: {name:"Feynman Extraction",   dom:"MIND", min:25, desc:"Explain one concept from scratch, no jargon. Find gaps, patch, compress to one sentence, card it."},
   z2:   {name:"Zone 2 Engine",        dom:"BODY", min:45, desc:"Conversational-pace cardio. Talk test or HR ~180−age. Stack with audiobooks or observation practice."},
@@ -661,6 +703,12 @@ const STEPS = {
    "Check answers. Record time and accuracy. Under 4 min at 90%+ is the standard.",
    "Then 5 minutes on this week's technique: ×11 trick, squares ending in 5, difference of squares (47×53 = 50²−9), or percentage flips.",
    "Friday extra: one Fermi estimate ('how many X in this city?') — decompose, estimate a range, then look up the truth and score yourself." ],
+ calc:[ "Open your current Math node in the Curriculum tab (start: Foundation Audit) — this block executes its protocol.",
+   "Warm-up (8 min): 5 problems from PAST topics, interleaved — pulled from your Trap Ledger and Anki, not from the current chapter. Retrieval before new input, always.",
+   "New material (10 min): ONE concept. Intuition first (3Blue1Brown for calculus topics), then read the formal version. Close everything and Feynman-explain it to a blank page.",
+   "Problems (rest of block): work the new concept until 3 consecutive clean solves. No answer-peeking before a full attempt.",
+   "Every error goes in the Trap Ledger classified as concept / slip / trap, and the trap becomes an Anki card tonight.",
+   "Weekly (any day): one Gauntlet — 10 mixed problems, 45 min, all past topics fair game. Score it in EVALUATIONS." ],
  deep:[ "Write the block's ONE objective on paper. If you can't state it in a sentence, you're not ready to start.",
    "Phone: different room. Tabs: closed. Tell people you're gone.",
    "Set the timer (below) to your current duration. Untrained: 25m. Add 5 min each week you hit every session; target 90.",
@@ -729,14 +777,14 @@ const STEPS = {
    "Finish with 10 minutes of planning: next week's node focuses and any ladder progressions (deep work +5min, cold +30s, n-back level)." ]
 };
 /* Related curriculum node per drill (jump link) */
-const NODELINK = { mem:"m3", dnb:"m5", math:"m6", deep:"m2", feyn:"m7", sr:"m1",
+const NODELINK = { mem:"m3", dnb:"m5", math:"m6", calc:"mm2", deep:"m2", feyn:"m7", sr:"m1",
   z2:"b3", gtg:"b4", surge:"b6", sit:"b5", cal:"b2",
   kim:"s1", obs:"s2", soc:"s3", dbf:"t5", strat:"t2", game:"tg1", poker:"tg3", eval:"t3" };
 const CORE = ["cal","kim","sr","dbf"];
 const SCHEDULE = { // day 0=Sunday
-  1:{title:"MIND — MEMORY & CAPACITY",    drills:["mem","dnb","gtg"]},
+  1:{title:"MIND — MEMORY & CALCULUS",    drills:["mem","dnb","calc"]},
   2:{title:"BODY — ENGINE",               drills:["z2","sit","read"]},
-  3:{title:"SOCIAL — FIELDWORK",          drills:["obs","soc","gtg"]},
+  3:{title:"SOCIAL — FIELDWORK + CALC",   drills:["obs","soc","calc"]},
   4:{title:"STRATEGY — TRADECRAFT",       drills:["strat","game","gtg"]},
   5:{title:"MIND — DEPTH",                drills:["deep","math","feyn"]},
   6:{title:"BODY — SURGE & FIELD",        drills:["surge","z2","obs"]},
@@ -753,6 +801,10 @@ const METRICS = [
   how:"Generate 20 random words. Memorize with your palace until perfect forward recall. Record total minutes. (Once mastered, switch to 30 digits or a card deck.)"},
  {id:"mathT", name:"20 Multiplications Time", unit:"min", dir:-1, dom:"MIND",
   how:"20 random two-digit × two-digit problems, mental only, write answers. Record minutes; only count if accuracy ≥90%."},
+ {id:"deriv", name:"Derivative Drill Time", unit:"min", dir:-1, dom:"MIND",
+  how:"20 standard derivatives (power/product/quotient/chain mixed), from any drill sheet. Use the focus timer. Counts only at ≥95% correct. Unlocked once you reach Math II."},
+ {id:"gaunt", name:"Calculus Gauntlet", unit:"%", dir:1, dom:"MIND",
+  how:"Weekly: 10 mixed problems spanning ALL math topics covered so far, unlabeled, 45 minutes. Record percent fully correct. Technique selection under interleaving is the real skill being measured."},
  {id:"focus", name:"Longest Clean Focus Block", unit:"min", dir:1, dom:"MIND",
   how:"Longest single deep-work block this week with ≤3 distraction ticks."},
  {id:"nback", name:"Dual N-Back Level", unit:"n", dir:1, dom:"MIND",
@@ -1553,6 +1605,12 @@ const WS_TPL={
    {k:"b",t:"area",label:"Baseline: speech pace, gesture level, eye contact, posture, humor style, energy"},
    {k:"l",t:"area",label:"Levers: what they want, what they avoid, which of the 7 levers they respond to"},
    {k:"d",t:"area",label:"Deviation log — date | what changed | topic on the table | later confirmed?"}]},
+ polya:{name:"Pólya Problem Autopsy",dom:"MIND",tip:"For every boss problem — solved or not. Understand → Plan → Execute → Review.",fields:[
+   {k:"q",t:"text",label:"The problem (source + statement, compressed)"},
+   {k:"u",t:"area",label:"UNDERSTAND: knowns, unknowns, conditions — restated in your own words"},
+   {k:"p",t:"area",label:"PLAN: strategy chosen and why (similar problem? work backwards? special case? auxiliary construction?)"},
+   {k:"x",t:"area",label:"EXECUTE: what happened, where it stalled, hints taken (after the mandatory 45-min struggle)"},
+   {k:"r",t:"area",label:"REVIEW: what generalizes, the trap for the Ledger, and the one-line moral"}]},
  aar:{name:"After-Action Review",dom:"STRATEGY",tip:"For any operation, test, negotiation, or week that mattered.",fields:[
    {k:"q",t:"text",label:"Event"},
    {k:"p",t:"area",label:"What was planned / predicted (with your stated probability)"},
@@ -1625,7 +1683,7 @@ function renderArch(){
     <h3>Weekly Structure (~90–120 min/day)</h3>
     <ul>
       <li><b>Daily core, every day (~28 min):</b> morning calibration (breath + objective + forecasts) · Kim's game · retrieval review · evening debrief (score forecasts, OODA note, bias caught).</li>
-      <li><b>Mon</b> — Mind: memory systems + dual n-back. <b>Tue</b> — Body: Zone 2 engine + doctrine reading. <b>Wed</b> — Social: fieldwork + technique block. <b>Thu</b> — Strategy: tradecraft + chess lab. <b>Fri</b> — Mind: deep work + math + Feynman. <b>Sat</b> — Body: surge + field. <b>Sun</b> — Evaluation battery + poker lab + planning.</li>
+      <li><b>Mon</b> — Mind: memory systems + dual n-back + calculus. <b>Tue</b> — Body: Zone 2 engine + doctrine reading. <b>Wed</b> — Social: fieldwork + calculus. <b>Thu</b> — Strategy: tradecraft + chess lab. <b>Fri</b> — Mind: deep work + math + Feynman. <b>Sat</b> — Body: surge + field. <b>Sun</b> — Evaluation battery + poker lab + planning.</li>
       <li>Grease-the-groove strength runs in the background most days — it costs minutes, not blocks.</li>
     </ul>
     <h3>Rules of the Room</h3>
@@ -1652,6 +1710,9 @@ function renderArch(){
       <li><i>The Theory of Poker</i> — David Sklansky (the EV foundation everything else builds on)</li>
       <li><i>The Mental Game of Poker</i> — Jared Tendler (tilt control — pairs directly with The Mask)</li>
       <li><i>Peak</i> — Anders Ericsson (deliberate practice, from the source)</li>
+      <li><i>Calculus Made Easy</i> — Silvanus Thompson (the friendliest serious calculus book ever written; free online)</li>
+      <li><i>How to Solve It</i> — George Pólya (problem-craft; the source of the autopsy worksheet)</li>
+      <li>3Blue1Brown, <i>Essence of Calculus</i> — free video series; watch the relevant episode before each new topic</li>
       <li>CIA, <i>A Tradecraft Primer: Structured Analytic Techniques</i> — free, declassified, on cia.gov</li>
     </ul>
     <h3>Primary Sources Behind This Program</h3>
