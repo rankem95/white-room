@@ -264,7 +264,7 @@ footer{border-top:1px solid var(--soft); margin-top:30px; padding-top:12px; font
   <div id="tm-body"></div>
 </div></div>
 
-<footer>WHITE ROOM v2.2 — Memory is automatic: progress saves to this browser after every action. Export an occasional backup from RECORDS. This is a self-development tool; it is not medical, psychological, or legal advice.</footer>
+<footer>WHITE ROOM v2.3 — Memory is automatic: progress saves to this browser after every action. Export an occasional backup from RECORDS. This is a self-development tool; it is not medical, psychological, or legal advice.</footer>
 </div>
 
 <div id="toast"></div>
@@ -992,19 +992,61 @@ async function pullCloud(){
     return (s&&s.designation)?s:null;
   }catch(e){ return null; }
 }
+function adoptRemote(remote,interactive){
+  S=remote;
+  try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){}
+  try{ IDB.set("state",JSON.stringify(S)); }catch(e){}
+  const g=document.getElementById("gate"); if(g) g.style.display="none";
+  renderAll(); setSync("synced");
+  if(interactive) toast("SYNCED FROM CLOUD — RECORD CURRENT");
+}
+let pendingRemote=null;
+function conflictDialog(remote){
+  pendingRemote=remote;
+  const row=(label,s)=>`<div class="sm" style="margin-bottom:6px;border:1px solid var(--soft);padding:8px 10px"><b>${label}</b><br>${esc(s.designation)} · ${s.xp||0} XP · Day ${Math.floor((new Date()-new Date(s.startDate))/86400000)+1} · ${(s.mastered||[]).length} nodes mastered<br><span class="xs mut">last saved: ${s.savedAt?new Date(s.savedAt).toLocaleString():"unknown"}</span></div>`;
+  TM.open("RECORD CONFLICT — CHOOSE SURVIVOR");
+  TM.body(`<p class="sm">This device and the cloud hold meaningfully different records. Nothing has been overwritten. Choose which record becomes canonical everywhere — the other is discarded.</p>
+    <div style="margin-top:10px">${row("THIS DEVICE",S)}${row("CLOUD",remote)}</div>
+    <div class="tm-ctr" style="margin-top:12px">
+      <button class="act" onclick="resolveConflict('local')">KEEP THIS DEVICE'S RECORD</button>
+      <button class="ghost" onclick="resolveConflict('cloud')">KEEP CLOUD RECORD</button>
+    </div>
+    <p class="xs mut tm-ctr" style="margin-top:8px">Rule of thumb: keep the one with more XP unless you know better.</p>`);
+}
+async function resolveConflict(which){
+  TM.close();
+  if(which==="local"){
+    S.savedAt=Date.now();
+    try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){}
+    try{ IDB.set("state",JSON.stringify(S)); }catch(e){}
+    await pushCloud();
+    toast("THIS DEVICE'S RECORD IS NOW CANONICAL");
+  } else if(pendingRemote){
+    pendingRemote.savedAt=Date.now();
+    adoptRemote(pendingRemote,false);
+    await pushCloud();
+    toast("CLOUD RECORD ADOPTED ON THIS DEVICE");
+  }
+  pendingRemote=null;
+}
 async function cloudSync(interactive){
   if(!syncToken()) return;
   setSync("syncing");
   const remote=await pullCloud();
-  if(remote && (!S || (remote.savedAt||0)>(S.savedAt||0))){
-    S=remote;
-    try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){}
-    try{ IDB.set("state",JSON.stringify(S)); }catch(e){}
-    const g=document.getElementById("gate"); if(g) g.style.display="none";
-    renderAll(); setSync("synced");
-    if(interactive) toast("SYNCED FROM CLOUD — RECORD CURRENT");
-  } else if(S){ await pushCloud(); if(interactive) toast("CLOUD UPDATED FROM THIS DEVICE"); }
-  else setSync("synced");
+  if(!remote){
+    if(S){ await pushCloud(); if(interactive) toast("CLOUD INITIALIZED FROM THIS DEVICE"); }
+    else{ setSync("synced"); if(interactive) toast("NO CLOUD RECORD YET — ENABLE SYNC ON THE DEVICE THAT HAS YOUR PROGRESS"); }
+    return;
+  }
+  if(!S){ adoptRemote(remote,interactive); return; }
+  const remoteNewer=(remote.savedAt||0)>(S.savedAt||0);
+  const winner=remoteNewer?remote:S, loser=remoteNewer?S:remote;
+  // guard: never silently let a meaningfully richer record die to a fresher-but-emptier one
+  if((loser.xp||0)>(winner.xp||0)+25 || (S.designation!==remote.designation && (loser.xp||0)>25)){
+    conflictDialog(remote); return;
+  }
+  if(remoteNewer) adoptRemote(remote,interactive);
+  else{ await pushCloud(); if(interactive) toast("CLOUD UPDATED FROM THIS DEVICE"); }
 }
 async function applyTokenVal(v,interactive){
   if(!v){ toast("PASTE A TOKEN"); return; }
