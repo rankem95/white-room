@@ -13,8 +13,8 @@
   --line:#111113; --soft:#d8d8d3; --red:#b5121b; --green:#1a6b3c; --gold:#8a6d1a;
 }
 [data-theme="dark"]{
-  --bg:#101012; --panel:#17171a; --ink:#e8e8e4; --ink2:#9a9aa0;
-  --line:#e8e8e4; --soft:#333338; --red:#e33540; --green:#3fae6e; --gold:#c9a83a;
+  --bg:#000000; --panel:#050505; --ink:#e8e8e4; --ink2:#9a9aa0;
+  --line:#e8e8e4; --soft:#2a2a2e; --red:#e33540; --green:#3fae6e; --gold:#c9a83a;
 }
 [data-theme="dark"] .dtag.MIND{border-color:#7d9bf0; color:#7d9bf0;}
 .hm{display:grid; grid-auto-flow:column; grid-template-rows:repeat(7,12px); gap:3px; overflow-x:auto; padding-bottom:4px;}
@@ -214,6 +214,8 @@ footer{border-top:1px solid var(--soft); margin-top:30px; padding-top:12px; font
       <p style="margin-top:14px"><b>Returning subject?</b> This browser holds no record. If you have an exported backup (.json), load it and continue exactly where you left off:</p>
       <button class="act" style="width:100%" onclick="document.getElementById('gimp').click()">▶ RESUME FROM BACKUP FILE</button>
       <input type="file" id="gimp" accept=".json" style="display:none" onchange="importData(event)">
+      <p class="xs mut" style="margin:10px 0 4px">— or, if cloud sync is set up on another device, connect it here —</p>
+      <div style="display:flex;gap:6px"><input type="text" id="gtok" placeholder="GitHub token (gist scope)"><button class="ghost" style="white-space:nowrap" onclick="gateSync()">CONNECT</button></div>
       <hr class="hr" style="margin:16px 0">
       <p class="xs mut" style="margin-bottom:6px">— or induct a new subject —</p>
     </div>
@@ -262,7 +264,7 @@ footer{border-top:1px solid var(--soft); margin-top:30px; padding-top:12px; font
   <div id="tm-body"></div>
 </div></div>
 
-<footer>WHITE ROOM v2.1 — Memory is automatic: progress saves to this browser after every action. Export an occasional backup from RECORDS. This is a self-development tool; it is not medical, psychological, or legal advice.</footer>
+<footer>WHITE ROOM v2.2 — Memory is automatic: progress saves to this browser after every action. Export an occasional backup from RECORDS. This is a self-development tool; it is not medical, psychological, or legal advice.</footer>
 </div>
 
 <div id="toast"></div>
@@ -907,6 +909,7 @@ function save(){
   S.savedAt=Date.now();
   try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
   try{ IDB.set("state", JSON.stringify(S)); }catch(e){} // second in-browser layer
+  clearTimeout(syncT); syncT=setTimeout(()=>{ try{ pushCloud(); }catch(e){} },2500); // third layer: cloud
 }
 
 /* =====================================================
@@ -930,6 +933,94 @@ const IDB={
     t.onsuccess=()=>res(); t.onerror=()=>rej(t.error); }); }
 };
 try{ if(navigator.storage&&navigator.storage.persist) navigator.storage.persist(); }catch(e){}
+
+/* =====================================================
+   CLOUD SYNC — private GitHub Gist, all devices
+   One token (gist scope only), pasted once per device.
+   Newest save wins. Token lives only in this browser.
+   ===================================================== */
+let syncT=null;
+function syncToken(){ try{ return localStorage.getItem("whiteroom_gh")||""; }catch(e){ return ""; } }
+function setSync(st){
+  const el=document.getElementById("syncstat");
+  if(el) el.textContent=({off:"OFF",syncing:"SYNCING…",synced:"SYNCED",error:"ERROR — CHECK TOKEN"})[st]||st;
+}
+async function ghFetch(url,opt){
+  opt=opt||{};
+  opt.headers=Object.assign({"Authorization":"Bearer "+syncToken(),"Accept":"application/vnd.github+json"},opt.headers||{});
+  return fetch(url,opt);
+}
+async function findGist(){
+  let gid=""; try{ gid=localStorage.getItem("whiteroom_gist")||""; }catch(e){}
+  if(gid) return gid;
+  const r=await ghFetch("https://api.github.com/gists?per_page=100");
+  if(!r.ok) throw new Error("auth");
+  const gs=await r.json();
+  const g=(gs||[]).find(x=>x.files&&x.files["whiteroom_save.json"]);
+  if(g){ try{ localStorage.setItem("whiteroom_gist",g.id); }catch(e){} return g.id; }
+  return null;
+}
+async function pushCloud(){
+  if(!syncToken()||!S) return false;
+  try{
+    setSync("syncing");
+    let gid=await findGist();
+    if(!gid){
+      const r=await ghFetch("https://api.github.com/gists",{method:"POST",
+        body:JSON.stringify({description:"White Room save — do not delete",public:false,
+        files:{"whiteroom_save.json":{content:JSON.stringify(S)}}})});
+      if(!r.ok){ setSync("error"); return false; }
+      const g=await r.json(); try{ localStorage.setItem("whiteroom_gist",g.id); }catch(e){}
+      setSync("synced"); return true;
+    }
+    const r=await ghFetch("https://api.github.com/gists/"+gid,{method:"PATCH",
+      body:JSON.stringify({files:{"whiteroom_save.json":{content:JSON.stringify(S)}}})});
+    setSync(r.ok?"synced":"error"); return r.ok;
+  }catch(e){ setSync("error"); return false; }
+}
+async function pullCloud(){
+  if(!syncToken()) return null;
+  try{
+    const gid=await findGist(); if(!gid) return null;
+    const r=await ghFetch("https://api.github.com/gists/"+gid);
+    if(!r.ok) return null;
+    const g=await r.json(); const f=g.files&&g.files["whiteroom_save.json"];
+    if(!f) return null;
+    let txt=f.content;
+    if(f.truncated) txt=await (await fetch(f.raw_url)).text();
+    const s=JSON.parse(txt);
+    return (s&&s.designation)?s:null;
+  }catch(e){ return null; }
+}
+async function cloudSync(interactive){
+  if(!syncToken()) return;
+  setSync("syncing");
+  const remote=await pullCloud();
+  if(remote && (!S || (remote.savedAt||0)>(S.savedAt||0))){
+    S=remote;
+    try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){}
+    try{ IDB.set("state",JSON.stringify(S)); }catch(e){}
+    const g=document.getElementById("gate"); if(g) g.style.display="none";
+    renderAll(); setSync("synced");
+    if(interactive) toast("SYNCED FROM CLOUD — RECORD CURRENT");
+  } else if(S){ await pushCloud(); if(interactive) toast("CLOUD UPDATED FROM THIS DEVICE"); }
+  else setSync("synced");
+}
+async function applyTokenVal(v,interactive){
+  if(!v){ toast("PASTE A TOKEN"); return; }
+  try{ localStorage.setItem("whiteroom_gh",v.trim()); }catch(e){}
+  const r=await ghFetch("https://api.github.com/gists?per_page=1").catch(()=>null);
+  if(!r||!r.ok){ toast("TOKEN REJECTED — NEEDS GIST SCOPE"); setSync("error"); return; }
+  toast("TOKEN ACCEPTED — SYNCING");
+  await cloudSync(interactive); renderSet();
+}
+function saveToken(){ const el=document.getElementById("ghtok"); applyTokenVal(el?el.value:"",true); }
+function gateSync(){ const el=document.getElementById("gtok"); applyTokenVal(el?el.value:"",true); }
+function dropToken(){
+  try{ localStorage.removeItem("whiteroom_gh"); localStorage.removeItem("whiteroom_gist"); }catch(e){}
+  renderSet(); toast("SYNC DISABLED ON THIS DEVICE");
+}
+window.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="hidden"&&S&&syncToken()) pushCloud(); });
 function todayStr(d){ const t=d||new Date(); return t.getFullYear()+"-"+String(t.getMonth()+1).padStart(2,"0")+"-"+String(t.getDate()).padStart(2,"0"); }
 function dayNumber(){ return Math.floor((new Date(todayStr())-new Date(S.startDate))/86400000)+1; }
 function level(){ return Math.floor(Math.sqrt(S.xp/40))+1; }
@@ -1943,6 +2034,19 @@ function renderSet(){
       ${RANKS.map(r=>`<div class="xs ${level()>=r.lv?'':'mut'}">${level()>=r.lv?"■":"□"} LV ${String(r.lv).padStart(2,"0")} — ${r.name} <span class="mut">· ${r.note}</span></div>`).join("")}
     </div>
     <div class="panel"><h2>Data Control</h2>
+      <div class="kv" style="margin-bottom:6px">Cloud sync — every device, one record &nbsp;<span class="mut xs">status: <span id="syncstat">${syncToken()?"ON":"OFF"}</span></span></div>
+      ${syncToken()?`<p class="sm mut" style="margin-bottom:8px">This device syncs to a private GitHub Gist after every action, and pulls the newest record on open. Paste the SAME token on any other device (or in the intro screen's CONNECT box) and phone + PC share one continuous record.</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+        <button class="act" onclick="cloudSync(true)">SYNC NOW</button>
+        <button class="ghost" onclick="dropToken()">DISABLE ON THIS DEVICE</button>
+      </div>`
+      :`<p class="sm mut" style="margin-bottom:8px">Make your record follow you to every device via a private GitHub Gist — free, on your own account, visible to nobody else. One-time setup: GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate new token → tick ONLY the <b>gist</b> scope → copy the token and paste it below. Then paste the same token once on each device.</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px">
+        <input type="text" id="ghtok" placeholder="ghp_… token (gist scope only)" style="flex:1;min-width:200px">
+        <button class="act" onclick="saveToken()">ENABLE SYNC</button>
+      </div>
+      <p class="xs mut" style="margin-bottom:8px">The token is stored only in this browser and sent only to api.github.com. Anyone with it could read this save — treat it like a password.</p>`}
+      <hr class="hr">
       <div class="kv" style="margin-bottom:6px">Automatic memory</div>
       <p class="sm mut" style="margin-bottom:8px">Progress saves itself to this browser in two layers after every action — nothing to manage, nothing to choose. Keep opening this same file in this same browser and the record is continuous. The only thing that can erase it is clearing this browser's site data, so export a backup once a week; IMPORT restores everything, anywhere.</p>
       <div class="kv" style="margin-bottom:6px">Backup</div>
@@ -1992,7 +2096,7 @@ function applyTheme(){
   let t="day"; try{ t=localStorage.getItem("whiteroom_theme")||"day"; }catch(e){}
   document.documentElement.dataset.theme=(t==="night")?"dark":"";
   const b=document.getElementById("themebtn"); if(b) b.textContent=(t==="night")?"DAY":"NIGHT";
-  const m=document.querySelector('meta[name="theme-color"]'); if(m) m.content=(t==="night")?"#101012":"#f5f5f2";
+  const m=document.querySelector('meta[name="theme-color"]'); if(m) m.content=(t==="night")?"#000000":"#f5f5f2";
 }
 function toggleTheme(){
   let t="day"; try{ t=localStorage.getItem("whiteroom_theme")||"day"; }catch(e){}
@@ -2015,6 +2119,7 @@ async function boot(){
     document.getElementById("gresume").style.display="block";
   }
   else{ renderAll(); }
+  cloudSync(false);
 }
 boot();
 document.addEventListener("keydown",e=>{
