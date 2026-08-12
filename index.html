@@ -268,7 +268,7 @@ footer{border-top:1px solid var(--soft); margin-top:30px; padding-top:12px; font
   <div id="tm-body"></div>
 </div></div>
 
-<footer>WHITE ROOM v2.4 — Memory is automatic: progress saves to this browser after every action. Export an occasional backup from RECORDS. This is a self-development tool; it is not medical, psychological, or legal advice.</footer>
+<footer>WHITE ROOM v2.5 — Memory is automatic: progress saves to this browser after every action. Export an occasional backup from RECORDS. This is a self-development tool; it is not medical, psychological, or legal advice.</footer>
 </div>
 
 <div id="toast"></div>
@@ -1233,6 +1233,19 @@ function renderToday(){
       </div>
       <div class="xs mut" style="max-width:340px">One objective, written down, phone in another room. Every urge to switch: tick a paper tally, return. The return is the rep.</div>
     </div>
+  </div>
+  <div class="panel"><h2>Frequency Chamber <span class="tag">auditory state control · generated locally</span></h2>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+      ${Object.keys(AUP).map(k=>`<button class="${AU.playing===k?'act':'ghost'}" onclick="auToggle('${k}')">${AUP[k].label}</button>`).join("")}
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <span class="kv">Volume</span>
+      <input type="range" min="0.05" max="1" step="0.01" value="${auVolPref()}" style="width:170px;accent-color:var(--ink)" oninput="auVol(this.value)">
+      <button class="ghost" onclick="auStop()">■ STOP</button>
+      <span class="xs ${AU.playing?'ok':'mut'}">${AU.playing?("ACTIVE — "+AUP[AU.playing].label):"SILENT"}</span>
+    </div>
+    <div class="xs mut" style="margin-top:8px">${AU.playing?esc(AUP[AU.playing].desc):"Select a state. Binaural presets require headphones — each ear receives a slightly different tone and the brain hears the difference as a slow pulse."}</div>
+    <div class="xs mut" style="margin-top:6px">Honesty note: evidence for binaural "entrainment" is mixed — treat the tone presets as conditioned state cues that gain power through consistent pairing with the same activity. The noise channels' masking effect is solidly supported. Keep volume low; audio should disappear behind the work.</div>
   </div>`;
 }
 let openHow=new Set();
@@ -1277,6 +1290,74 @@ function beep(){ try{ const c=new (window.AudioContext||window.webkitAudioContex
   [0,.3,.6].forEach(t=>{ const o=c.createOscillator(),g=c.createGain();
     o.connect(g); g.connect(c.destination); o.frequency.value=880; g.gain.value=.12;
     o.start(c.currentTime+t); o.stop(c.currentTime+t+.18); }); }catch(e){} }
+
+/* =====================================================
+   FREQUENCY CHAMBER — WebAudio state control
+   Binaural presets (headphones) + masking noise.
+   ===================================================== */
+const AUP={
+ gamma:{label:"DEEP WORK · 40Hz γ",carrier:200,beat:40,noise:"brown",nvol:.12,
+   desc:"40 Hz binaural over a faint brown-noise bed. Gamma-band activity is associated with focused attention and working memory. For deep work, math, and memory blocks. Headphones required."},
+ alpha:{label:"FLOW · 10Hz α",carrier:220,beat:10,noise:null,
+   desc:"10 Hz binaural. Alpha rhythms dominate relaxed-alert states — reading, review, strategy analysis. Headphones required."},
+ theta:{label:"CALM · 6Hz θ",carrier:180,beat:6,noise:null,
+   desc:"6 Hz binaural. Wind-down, visualization, box-breathing sessions. Headphones required."},
+ delta:{label:"PRE-SLEEP · 2.5Hz δ",carrier:150,beat:2.5,noise:"brown",nvol:.2,
+   desc:"2.5 Hz binaural over brown noise. Downshift for the last hour of the day only — never while training. Headphones required."},
+ brown:{label:"THE STATIC · brown",noise:"brown",nvol:.8,
+   desc:"Deep waterfall rumble. The best-supported tool in this panel: broadband masking buries environmental distraction. Works on speakers. Open-office slayer."},
+ pink:{label:"RAINFALL · pink",noise:"pink",nvol:.6,
+   desc:"Softer broadband noise, weighted like rainfall. Gentler masking for reading and retrieval review. Works on speakers."}
+};
+let AU={ctx:null,nodes:[],gain:null,playing:null};
+function auVolPref(){ try{ return localStorage.getItem("whiteroom_vol")||"0.5"; }catch(e){ return "0.5"; } }
+function auVol(v){ try{ localStorage.setItem("whiteroom_vol",v); }catch(e){}
+  if(AU.gain) AU.gain.gain.value=parseFloat(v)*0.4; }
+function auStop(){
+  AU.nodes.forEach(n=>{ try{ n.stop(); }catch(e){} });
+  AU.nodes=[]; AU.playing=null;
+  const t=document.getElementById("tab-today"); if(t&&t.innerHTML) renderToday();
+}
+function auToggle(k){ if(AU.playing===k){ auStop(); } else { auStart(k); } }
+function auStart(k){
+  try{
+    AU.nodes.forEach(n=>{ try{ n.stop(); }catch(e){} }); AU.nodes=[];
+    const c=AU.ctx||(AU.ctx=new (window.AudioContext||window.webkitAudioContext)());
+    if(c.state==="suspended") c.resume();
+    const g=c.createGain(); g.gain.value=parseFloat(auVolPref())*0.4; g.connect(c.destination);
+    AU.gain=g;
+    const Pz=AUP[k];
+    if(Pz.beat){
+      const merger=c.createChannelMerger(2);
+      const oL=c.createOscillator(), oR=c.createOscillator();
+      const gL=c.createGain(), gR=c.createGain(); gL.gain.value=.5; gR.gain.value=.5;
+      oL.type="sine"; oR.type="sine";
+      oL.frequency.value=Pz.carrier; oR.frequency.value=Pz.carrier+Pz.beat;
+      oL.connect(gL); oR.connect(gR);
+      gL.connect(merger,0,0); gR.connect(merger,0,1);
+      merger.connect(g);
+      oL.start(); oR.start();
+      AU.nodes.push(oL,oR);
+    }
+    if(Pz.noise){
+      const buf=c.createBuffer(1,c.sampleRate*4,c.sampleRate);
+      const d=buf.getChannelData(0);
+      if(Pz.noise==="brown"){ let last=0;
+        for(let i=0;i<d.length;i++){ const wN=Math.random()*2-1; last=(last+0.02*wN)/1.02; d[i]=last*3.5; }
+      } else { let b0=0,b1=0,b2=0;
+        for(let i=0;i<d.length;i++){ const wN=Math.random()*2-1;
+          b0=0.99886*b0+wN*0.0555179; b1=0.99332*b1+wN*0.0750759; b2=0.96900*b2+wN*0.1538520;
+          d[i]=(b0+b1+b2+wN*0.3104856)*0.2; }
+      }
+      const src=c.createBufferSource(); src.buffer=buf; src.loop=true;
+      const ng=c.createGain(); ng.gain.value=Pz.nvol||0.3;
+      src.connect(ng); ng.connect(g); src.start();
+      AU.nodes.push(src);
+    }
+    AU.playing=k;
+    renderToday();
+  }catch(e){ toast("AUDIO NOT SUPPORTED IN THIS BROWSER"); }
+}
 
 /* =====================================================
    RENDER — CURRICULUM TREE
