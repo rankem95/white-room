@@ -250,6 +250,7 @@ footer{border-top:1px solid var(--soft); margin-top:30px; padding-top:12px; font
   <button data-tab="ac">Academy</button>
   <button data-tab="eval">Evaluations</button>
   <button data-tab="ws">Worksheets</button>
+  <button data-tab="fd">Fifth Dial</button>
   <button data-tab="arch">Doctrine</button>
   <button data-tab="set">Records</button>
 </nav>
@@ -260,6 +261,7 @@ footer{border-top:1px solid var(--soft); margin-top:30px; padding-top:12px; font
 <section class="tab" id="tab-ac"></section>
 <section class="tab" id="tab-eval"></section>
 <section class="tab" id="tab-ws"></section>
+<section class="tab" id="tab-fd"></section>
 <section class="tab" id="tab-arch"></section>
 <section class="tab" id="tab-set"></section>
 
@@ -268,7 +270,7 @@ footer{border-top:1px solid var(--soft); margin-top:30px; padding-top:12px; font
   <div id="tm-body"></div>
 </div></div>
 
-<footer>WHITE ROOM v2.6 — Memory is automatic: progress saves to this browser after every action. Export an occasional backup from RECORDS. This is a self-development tool; it is not medical, psychological, or legal advice.</footer>
+<footer>WHITE ROOM v2.7 — Memory is automatic: progress saves to this browser after every action. Export an occasional backup from RECORDS. This is a self-development tool; it is not medical, psychological, or legal advice.</footer>
 </div>
 
 <div id="toast"></div>
@@ -2293,6 +2295,41 @@ function wsDel(i){
 }
 
 /* =====================================================
+   THE FIFTH DIAL — embedded 12-week physical block
+   ===================================================== */
+function fdDefault(){
+  try{ if(location.hostname.endsWith(".github.io")) return location.origin+"/fifth-dial/"; }catch(e){}
+  return "";
+}
+function renderFD(){
+  const url=S.fdUrl||"";
+  document.getElementById("tab-fd").innerHTML=`
+  <div class="panel"><h2>The Fifth Dial <span class="tag">12-week physical block · companion tracker</span></h2>
+    <div class="sm" style="margin-bottom:8px">Every adaptation is bought with a different currency, and the BODY track already trades in four: <b>mitochondria</b> (time spent easy — the Engine), <b>the ceiling</b> (minutes spent brutal — the Surge), <b>hardening</b> (repetition of controlled discomfort — Stress Inoculation), and <b>neural strength</b> (crisp practice while fresh — the Ladders). The Fifth Dial is the fifth currency: <b>muscle</b> — bought with hard sets taken close to failure, loaded in the stretched position, repeated often enough to matter.</div>
+    <div class="xs mut">It runs as its own 12-week tracker — four lifting days, ~175 easy minutes, ~16 ceiling minutes, cold reps, and the arm wrestling base — embedded below. It keeps its own log and its own backups (its DATA tab), separate from White Room XP: log the lifting in the tracker, keep checking your BODY blocks here. The five dials do not fight each other; they only fight the murky middle — jogging too hard to build an engine, lifting too soft to build tissue.</div>
+  </div>
+  ${url?`
+  <div class="panel"><h2>Tracker <span class="tag"><a href="${esc(url)}" target="_blank" rel="noopener" style="color:var(--red)">open full screen ↗</a></span></h2>
+    <iframe src="${esc(url)}" style="width:100%;height:78vh;border:1px solid var(--line);background:#fff" title="The Fifth Dial"></iframe>
+    <div class="xs mut" style="margin-top:6px">Embedded from ${esc(url)} · <button class="howbtn" style="margin:0" onclick="fdSetUrl('')">CHANGE ADDRESS</button></div>
+  </div>`
+  :`
+  <div class="panel"><h2>Connect the tracker</h2>
+    <p class="sm mut" style="margin-bottom:8px">Host the Fifth Dial the same way you hosted this app — its own public repo (e.g. <b>fifth-dial</b>) with GitHub Pages switched on — then paste its address here. The address saves with your record and syncs to your other devices; the embed works on the phone app too.</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <input type="text" id="fd-url" placeholder="https://yourusername.github.io/fifth-dial/" value="${esc(fdDefault())}" style="flex:1;min-width:220px">
+      <button class="act" onclick="fdSetUrl(document.getElementById('fd-url').value)">EMBED TRACKER</button>
+    </div>
+  </div>`}`;
+}
+function fdSetUrl(u){
+  u=(u||"").trim();
+  if(u && !/^https?:\/\//.test(u)) u="https://"+u;
+  S.fdUrl=u; save(); renderFD();
+  toast(u?"FIFTH DIAL LINKED":"FIFTH DIAL ADDRESS CLEARED");
+}
+
+/* =====================================================
    RENDER — DOCTRINE (static)
    ===================================================== */
 function renderArch(){
@@ -2435,7 +2472,7 @@ function wipe(){
    INIT
    ===================================================== */
 function migrate(){ S.worksheets=S.worksheets||[]; S.forecasts=S.forecasts||[]; S.mathProf=S.mathProf||{}; S.lessons=S.lessons||[]; }
-function renderAll(){ migrate(); renderHeader(); renderDash(); renderToday(); renderTree(); renderAcademy(); renderEval(); renderWS(); renderArch(); renderSet(); }
+function renderAll(){ migrate(); renderHeader(); renderDash(); renderToday(); renderTree(); renderAcademy(); renderEval(); renderWS(); renderFD(); renderArch(); renderSet(); }
 function applyTheme(){
   let t="day"; try{ t=localStorage.getItem("whiteroom_theme")||"day"; }catch(e){}
   document.documentElement.dataset.theme=(t==="night")?"dark":"";
