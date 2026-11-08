@@ -270,7 +270,7 @@ footer{border-top:1px solid var(--soft); margin-top:30px; padding-top:12px; font
   <div id="tm-body"></div>
 </div></div>
 
-<footer>WHITE ROOM v2.7 — Memory is automatic: progress saves to this browser after every action. Export an occasional backup from RECORDS. This is a self-development tool; it is not medical, psychological, or legal advice.</footer>
+<footer>WHITE ROOM v2.8 — Memory is automatic: progress saves to this browser after every action. Export an occasional backup from RECORDS. This is a self-development tool; it is not medical, psychological, or legal advice.</footer>
 </div>
 
 <div id="toast"></div>
@@ -1084,8 +1084,10 @@ async function cloudSync(interactive){
   if(!S){ adoptRemote(remote,interactive); return; }
   const remoteNewer=(remote.savedAt||0)>(S.savedAt||0);
   const winner=remoteNewer?remote:S, loser=remoteNewer?S:remote;
+  // a deliberate RESET carries a resetAt marker and propagates without a conflict dialog
+  const deliberateReset=(winner.resetAt||0)>(loser.resetAt||0);
   // guard: never silently let a meaningfully richer record die to a fresher-but-emptier one
-  if((loser.xp||0)>(winner.xp||0)+25 || (S.designation!==remote.designation && (loser.xp||0)>25)){
+  if(!deliberateReset && ((loser.xp||0)>(winner.xp||0)+25 || (S.designation!==remote.designation && (loser.xp||0)>25))){
     conflictDialog(remote); return;
   }
   if(remoteNewer) adoptRemote(remote,interactive);
@@ -2440,7 +2442,12 @@ function renderSet(){
       <div class="kv" style="margin-bottom:6px">Rename designation</div>
       <div style="display:flex;gap:8px"><input type="text" id="rn" value="${esc(S.designation)}" maxlength="24"><button class="ghost" onclick="rename()">SAVE</button></div>
       <hr class="hr">
-      <button class="ghost" style="border-color:var(--red);color:var(--red)" onclick="wipe()">ERASE SUBJECT — TOTAL RESET</button>
+      <div class="kv" style="margin-bottom:6px">Danger zone</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="ghost" style="border-color:var(--red);color:var(--red)" onclick="resetProgram()">RESET PROGRESS — DAY 1 (ALL DEVICES)</button>
+        <button class="ghost" style="border-color:var(--red);color:var(--red)" onclick="wipe()">ERASE THIS DEVICE</button>
+      </div>
+      <p class="xs mut" style="margin-top:6px">RESET keeps your designation and the Fifth Dial link, zeroes everything else, and — with sync on — rolls out to every device automatically. ERASE wipes only this browser and disconnects its sync. The Fifth Dial tracker has its own reset: its DATA tab → Erase everything (per device).</p>
     </div>
   </div>`;
 }
@@ -2460,9 +2467,24 @@ function importData(ev){
   r.readAsText(f);
 }
 function rename(){ const v=document.getElementById("rn").value.trim(); if(v){ S.designation=v; save(); renderAll(); toast("DESIGNATION UPDATED"); } }
+async function resetProgram(){
+  if(!confirm("RESET ALL PROGRESS and return to Day 1?\n\nXP, streaks, logs, metrics, mastered nodes, worksheets, forecasts, lessons — everything returns to zero. Your designation is kept." + (syncToken()?"\n\nCloud sync is ON: this reset propagates to ALL your devices.":""))) return;
+  if(!confirm("Final confirmation — there is no undo. (Records → EXPORT BACKUP first if in doubt.)")) return;
+  const name=(S&&S.designation)||"";
+  const keepUrl=(S&&S.fdUrl)||"";
+  S=fresh(name||"SUBJECT");
+  S.fdUrl=keepUrl;
+  S.resetAt=S.savedAt;
+  migrate(); save();
+  if(syncToken()) await pushCloud();
+  renderAll();
+  toast("PROGRAM RESET — DAY 1 BEGINS AGAIN");
+}
 function wipe(){
-  if(confirm("Erase all progress permanently? The White Room keeps no duplicates.")){
+  if(syncToken() && !confirm("Note: this erases THIS DEVICE only and disconnects it from cloud sync. The cloud record survives for your other devices.\n\nTo restart the program everywhere, use RESET PROGRESS instead. Continue erasing this device?")) return;
+  if(confirm("Erase this device's record and identity permanently?")){
     localStorage.removeItem(KEY);
+    try{ localStorage.removeItem("whiteroom_gh"); localStorage.removeItem("whiteroom_gist"); }catch(e){}
     try{ IDB.del("state"); IDB.del("handle"); }catch(e){}
     setTimeout(()=>location.reload(),200);
   }
